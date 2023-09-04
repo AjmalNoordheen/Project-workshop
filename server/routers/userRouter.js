@@ -24,5 +24,8 @@ router.get('/getUserBookings',check.isBlocked,bookingController.getUserBooking)
 router.patch('/cancelBooking',bookingController.cancelBooking)
 router.get('/loadChat',check.isBlocked,auth.verifyToken,chatController.loadChat)
 router.post('/addMessage',chatController.addMessage)
+router.get('/listChat',chatController.listChat)
+router.get('/fetchMessages',chatController.fetchMessages)
+
 
 module.exports=router

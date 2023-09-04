@@ -1,29 +1,76 @@
 import React, { useEffect, useRef, useState } from "react";
-import AxiosInstance from "../../../Axios/proAxios";
+import proInstance from "../../../Axios/proAxios";
+import userInstance from "../../../Axios/userAxios";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import { NavBar } from "../NavBar/NavBar";
+import { NavBar } from "../../proffesional/NavBar/NavBar";
+import ChatList from "./ChatList";
+import { useLocation } from "react-router-dom";
 
-function Chats({}) {
-  const [inputMessage, setInputMessage] = useState("");
+function Chats({pro,fun}) {
   const [socket, setSocket] = useState(null);
   // const [chat, setChat] = useState('true')
-  const [chatList, setChatList] = useState();
-  const [Id, setChatId] = useState(null);
-  const [chatId, setChatIdd] = useState(null);
-
-  const email = useSelector((store) => store.Proffessional.email);
+  
+  const proAxios = proInstance();
+  const userAxios = userInstance();
+  
+  const [chatList, setChatList] = useState(null);
+  const [receiver, setReceiver] = useState(null)
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState('');
+  const [timeStamp, setTimeStamp] = useState(Date.now());
+  
   const messageHolder = useRef(null);
 
-  const userType = "proffesional";
-  const proAxios = AxiosInstance();
-  const UserDataEmail = useSelector((store) => store.Proffessional.email);
-  const userData = useSelector((store) => store.Proffessional.proData);
+  const location = useLocation()
+  const senderType = location.pathname.includes('proffesional') ? 'professional' : 'user'
+
+  const senderData = useSelector((store) => senderType === 'professional' ?   store.Proffessional.proData : store.Client.userData);
+  
+  const Axios=senderType === 'professional'?proAxios:userAxios
+
+  console.log(timeStamp,'oooooooooooooooooooooooooooo');
   useEffect(() => {
-    proAxios
-      .get(`/loadProChat?id=${Id}`)
+
+
+      Axios.get(`/listChat?id=${senderData._id}&senderType=${senderType}&proId=${pro}`).then((res) => {
+        setChatList(res.data.list);
+      });
+    
+  }, []);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000/chat");
+    setSocket(newSocket);
+    return () => {
+      if (newSocket) newSocket.disconnect();
+    };
+  }, [receiver]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit("setup", receiver);
+      socket.emit('read',timeStamp,receiver,senderData._id)
+      socket.on("messageResponse", (message, receivedChatId) => {
+
+        if (receiver === receivedChatId) {
+            setMessages((prevMessages) => [...prevMessages, message]);
+            socket.emit('read',Date.now(),receiver,senderData._id)
+
+        }
+      });
+      socket.on('readResponse',(timestamp,chatId,senderId)=>{
+        console.log(timestamp,'timeetamppop');
+        if (receiver === chatId) {
+          if(senderId != senderData._id)
+          setTimeStamp(timestamp)
+        }
+      })
+    }
+  }, [socket]);
+
+  useEffect(() => {
+   Axios.get(`/fetchMessages?id=${receiver}`)
       .then((res) => {   
         if (res) {
           setMessages(res.data.messages);
@@ -34,63 +81,25 @@ function Chats({}) {
       .catch((error) => {
         console.log(error);
       });
-  }, [Id]);
+  }, [receiver]);
 
-  // useEffect(() => {
-  //     setUserId(userData);
-  //   }, [userData]);
-
-  useEffect(() => {
-    proAxios.get(`/listChat?email=${email}`).then((res) => {
-      setChatList(res.data.list);
-    });
-  }, []);
+  console.log(receiver);
 
   const sendMessage = async () => {
     console.log(message.length);
 
     if (message.length > 0) {
-      const res = await proAxios.post("/addProMessage", {
-        message,
-        chatId,
-        UserDataEmail,
-        userType,
-      });
-      if (res) {
-        let newMessage = {
-          text: message,
-          senderType: userType,
-          senderId: userData._id,
-          timestamp: Date.now(),
-        };
-        setMessages(res.data.messages);
+      let newMessage = {
+        text: message,
+        senderType,
+        senderId: senderData._id,
+        receiver,
+        timestamp: Date.now(),
+      };
         setMessage("");
-        socket.emit("newMessage", newMessage, Id);
+        socket.emit("newMessage", newMessage, receiver);
       }
     }
-  };
-
-  //===============================
-  useEffect(() => {
-    const newSocket = io("http://localhost:3000/chat");
-    setSocket(newSocket);
-    return () => {
-      if (newSocket) newSocket.disconnect();
-    };
-  }, [Id]);
-
-  useEffect(() => {
-    if (socket) {
-      socket.emit("setup", Id);
-      socket.on("messageResponse", (message, receivedChatId) => {
-        if (Id === receivedChatId) {
-          if (message.senderId != userData._id) {
-            setMessages((prevMessages) => [...prevMessages, message]);
-          }
-        }
-      });
-    }
-  }, [socket]);
 
   useEffect(() => {
     if (messageHolder.current)
@@ -103,62 +112,7 @@ function Chats({}) {
           {/* <h1 className="text-xl m-[3%]">Chats</h1> */}
 		  <NavBar/>
       <div className="flex h-screen full antialiased justify-center items-center text-gray-800">
-        <div className="w-5/12 h-[92%] flex justify-center items-center rounded-lg bg-gray-300 ml-2 ">
-          <div className="h-[90%]  overflow-scroll w-[96%]  bg-gray-200">
-			<p className="m-2 font-bold">Chats</p>
-            {chatList ? (
-              chatList.map((list) => {
-                return (
-                  <div
-                    onClick={() => {
-                      setChatId(list._id);
-                      setChatIdd(list._id);
-                      setMessages(list.messages);
-                    }}
-                    className="m-1 bg-white h-[20%]  flex items-center"
-                  >
-                    <img
-                      src={list?.user?.image}
-                      className="h-[50%] rounded-full  md:block w-[10%] ml-[1%]"
-                      alt=""
-                    />
-                    <div className="overflow-hidden ml-3 h-[60%]  w-full">
-                      <h1 className="font-bold">{list?.user?.name}</h1>
-                      <small className="w-[100%]">
-                        {list.messages
-                          ? list.messages[list.messages.length - 1]
-                            ? list.messages[list.messages.length - 1].text
-                            : ""
-                          : ""}
-                      </small>
-                    </div>
-                    <div className="md:mr-[2%] text-end w-full flex-col h-full">
-                      <p className="text-xs">
-                        {list.messages &&
-                        list.messages[list.messages.length - 1] &&
-                        
-                           new Date(
-                              list.messages[list.messages.length - 1].timestamp
-                            ).toLocaleDateString()
-                           }
-                      </p>{" "}
-                      {/* <div className="border mt-[50%]  rounded-full w-[40%] text-center text-xs font-bold bg-green-600 text-white h-[26%]">
-												1
-											</div> */}
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div>
-                <h1>no list</h1>{" "}
-              </div>
-            )}
-          </div>
-          <button className="bg-black px-4 sm:hidden text-white hover:bg-white hover:text-black py-2 rounded-md">
-            Back
-          </button>
-        </div>
+        <ChatList chatList={chatList} setReceiver={setReceiver} type={senderType} />
         {/* </div> */}
         <div className="sm:flex sm:flex-row h-full w-11/12 overflow-x-hidden">
           <div className="flex flex-col flex-auto h-full p-6 ">
@@ -174,7 +128,7 @@ function Chats({}) {
                           key={message._id}
                           className="grid grid-cols-12 gap-y-2"
                         >
-                          {message?.senderId == userData._id ? (
+                          {message?.senderId == senderData._id ? (
                             <div className="col-start-7 col-end-13 p-3 rounded-lg">
                               <div className="flex items-center justify-start flex-row-reverse">
                                 <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
@@ -198,6 +152,7 @@ function Chats({}) {
                                       hour12: true,
                                     })}
                                   </small>
+                                  <small>{new Date(message.timestamp) < new Date(timeStamp) ? 'read' : 'unread'}</small>
                                 </div>
                               </div>
                             </div>

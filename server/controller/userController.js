@@ -94,7 +94,7 @@ const userLogin = async (req, res) => {
 
     if (user.isVerified === true) {
       const token = authToken.generateToken(user);
-
+      console.log('okokokokokokokokokokok');
       userSignUp.Status = true;
       userSignUp.message = 'You are logged in';
       userSignUp.token = token;

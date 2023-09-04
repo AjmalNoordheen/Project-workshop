@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import NavBar from "../Navbar/Navbar";
-import Pagination from "../../ReuseItems/Pagination";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminAxiosInstance from '../../../Axios/AdminAxios'
 import ProfessionalAxios from '../../../Axios/proAxios'
-import Chat from "../Chat/Chat";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Chats from "../../ReuseItems/Chat/ChatArea";
 
 
 function ProfessionalList() {
@@ -81,7 +80,7 @@ const filteredPros = pros.filter((pro) => {
   const currentItems = filteredPros.slice(indexOfFirstItem, indexOfLastItem);
   return (
     <>
-    {show != 1?<Chat fun={setShow} id={show}/>:(<>
+    {show != 1?<Chats fun={setShow} pro={show}/>:(<>
       <div className="w-full bg-[#1e51db] ">
     <NavBar data={1}/>
     </div>

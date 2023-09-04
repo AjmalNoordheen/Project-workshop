@@ -6,7 +6,8 @@ export const ClientAuth = createSlice({
         Token    : null,
         userName : null,
         email    : null,
-        userData : null
+        userData : null,
+        id : null,
     },
     reducers:{
         ClientLogin(state,action){
@@ -26,6 +27,10 @@ export const ClientAuth = createSlice({
         },
         ClientData(state,action){
             state.userData = action.payload.userData
+            console.log( state.userData);
+        },
+        ClientId(state,action){
+            state.id = action.payload.id
             console.log( state.userData);
         }
     }

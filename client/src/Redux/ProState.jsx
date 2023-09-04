@@ -7,7 +7,8 @@ export const ProffesionalAuth = createSlice({
     userName: null,
     email:null,
     image:null,
-    proData:null
+    proData:null,
+    id : null
   },
   reducers: {
     ProfessionalLogin(state, action) {
@@ -31,6 +32,9 @@ export const ProffesionalAuth = createSlice({
     },
     ProfessionalData(state,action){
       state.proData = action.payload.proData
+  },
+    ProfessionalID(state,action){
+      state.id = action.payload.id
   }
   },
 });

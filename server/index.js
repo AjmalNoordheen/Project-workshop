@@ -41,10 +41,12 @@ io.of("/chat").on("connection", (socket) => {
 	socket.on("newMessage", (message, chatId) => {
 		console.log("mEssage recieved", message, "on ", chatId);
 		io.of("/chat").emit("messageResponse", message, chatId);
+
 		console.log("sended");
 	});
 
-	socket.on("read", (timestamp, chatId) => {
-		io.of("/chat").emit("readResponse", timestamp, chatId);
+	socket.on("read", (timestamp, chatId,senderId) => {
+		console.log('first', timestamp, senderId, chatId  	)
+		io.of("/chat").emit("readResponse", timestamp, chatId,senderId);
 	});
 });
