@@ -28,6 +28,11 @@ const chatSchema = new mongoose.Schema(
           required: true,
           refPath: "messages.senderType", // Corrected 'message' to 'messages'
         },
+        receiverId:{
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: "messages.senderType", // Corrected 'message' to 'messages'
+        },
         is_read: {
           type: Boolean,
           default: false

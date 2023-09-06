@@ -1,10 +1,9 @@
 import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
 import { ClientLogout } from "../../../Redux/userState";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import AxiosInstance from '../../../Axios/userAxios'
 
 
@@ -23,7 +22,7 @@ export default function Example({data,setHeight}) {
     { name: "Home", href: "/", current: false },
     { name: "Freelancers", href: "/prolists", current: false },
     { name: "Bookings",href:userToken? "/bookings":'', current: false },
-    { name: "Calendar", href: "#", current: false },
+    { name: "Wallet", href:userToken? '/wallet':'', current: false },
   ];
   useEffect(()=>{
     userAxios.get(`/blockAuth?email=${email}&nav=${true}`).then((res)=>{

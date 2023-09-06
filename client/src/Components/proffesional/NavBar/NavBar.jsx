@@ -138,13 +138,13 @@ export function NavBar({data,setHeight}) {
                         <Menu.Item>
                           {({ active }) => (
                             <Link
-                              href="#"
+                              to={"/proffesional/wallet"}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
-                              Settings
+                              Wallet
                             </Link>
                           )}
                         </Menu.Item>

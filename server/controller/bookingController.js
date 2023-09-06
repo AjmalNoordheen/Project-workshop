@@ -1,7 +1,7 @@
 const bookingSchema = require('../Model/BookingSchema');
 const UserSchema = require('../Model/userSchema');
 const proSchema  = require('../Model/mechanicSchema');
-const { default: mongoose } = require('mongoose');
+const transactionSchema  = require('../Model/transactionSchema');
 // ============Save Booking Details==============
     const BookingDetails = async(req,res)=>{
         try {
@@ -39,8 +39,6 @@ const bookingExist = async (req,res)=>{
     const pro =await proSchema.findOne({email:email})
     const dateExist = await bookingSchema.find({mechanic:pro._id}) 
     const unSavedDates = dateExist.map((doc) => doc.unSavedDate).map((doc)=> doc);
-    console.log(dateExist);
-    console.log(unSavedDates);
     if(unSavedDates){
         res.status(200).json({unSavedDates})
     }else{
@@ -96,7 +94,6 @@ const getUserBooking = async (req,res)=>{
     const cancelBooking = async (req,res)=>{
         try {
             const {id} = req.query
-            console.log(id);
             const updatedData = await bookingSchema.updateOne({_id:id},{$set:{status:'cancelled'},$unset:{unSavedDate:1}}) 
             if(updatedData){
                 res.status(200).json({message:'success'})
@@ -165,5 +162,124 @@ const proBookings = async (req, res) => {
     }
 };
 
-module.exports={BookingDetails,bookingExist,getUserBooking,cancelBooking,
-                listAllBooking,proBookings}
+
+// ======================WalletDetails==================
+
+  const walletdetails = async(req,res)=>{
+    try {
+      const {senderData,type} = req.query
+      if(type=='user'){
+        const userDetails = await UserSchema.findOne({_id:senderData})
+        const transactionDetails = await transactionSchema.find({userId:userDetails._id,withdrawStatus:{ $exists:false}}).populate('bookingId').populate('professional').populate('userId')
+        if(transactionDetails){
+          res.json({wallet:userDetails.wallet,transactions:transactionDetails})
+        }else{
+          res.status(500)
+        }
+      }else{
+        const proDetails = await proSchema.findOne({_id:senderData})
+        const transactionDetails = await transactionSchema.find({professional:proDetails._id,withdrawStatus:{ $exists:false}}).populate('bookingId').populate('userId').populate('professional')
+        if(transactionDetails){
+          res.json({wallet:proDetails.wallet,transactions:transactionDetails})
+        }else{
+          res.status(500)
+        } 
+      }
+     
+    } catch (error) {
+      res.status(500)
+    }
+  }
+
+// ================================= withDrawelRequest ========================
+  const withDrawelRequest = async(req,res)=>{
+    try {
+      const data = req.body.withDrawel
+      let withdrawSavedData
+
+      if(data.type=='user'){
+       withdrawSavedData = await transactionSchema.create({
+         type:'withdrawel',
+         withdrawStatus:'requested',
+         date:new Date(),
+         userId:data.holderID,
+         accDetails:{
+          accNo:data.accountNumber,
+          holderName:data.holderName,
+          bankName:data.bankName,
+          ifsc:data.ifscCode,
+          branch:data.branch,
+          amount:data.amount   
+         }
+        })
+      }else{
+        withdrawSavedData = await transactionSchema.create({
+          type:'withdrawel',
+          withdrawStatus:'requested',
+          date:new Date(),
+          professional:data.holderID,
+          accDetails:{
+           accNo:data.accountNumber,
+           holderName:data.holderName,
+           bankName:data.bankName,
+           ifsc:data.ifscCode,
+           branch:data.branch,
+           amount:data.amount   
+          }
+         })
+      }
+
+      if(withdrawSavedData){
+        res.status(200).json("success")
+      }else{
+        res.status(200).json("failed")
+      }
+
+    } catch (error) {
+      res.status(500)
+    }
+  }
+
+// ================Manage WithdrawelRequest =========================
+const getWithdrawelRequest = async(req,res)=>{
+  try {
+      const requests = await transactionSchema.find({withdrawStatus:'requested'}).populate('userId').populate('professional')
+      if(requests){
+        res.json({status:'success',data:requests})
+      }else{
+        res.json({status:'failed'})
+      }
+  } catch (error) {
+    res.status(500)
+  }
+}
+// ============= Update the Withdrawel datas ====================
+
+  const updateWithdrawel = async(req,res)=>{
+    try {
+      const {withdrawel,holderId,type} = req.body
+      console.log(type=='user')
+      const updatedWithDrawData = await transactionSchema.findOneAndUpdate({_id:withdrawel},{$set:{withdrawStatus:'accepted'}})
+      console.log(updatedWithDrawData)
+      if(type == 'user'){
+        const userDetails = await UserSchema.findOneAndUpdate({_id:holderId},{$inc:{wallet:-updatedWithDrawData.accDetails.amount}})
+        res.status(200).json({message:'success'})
+        return 
+      }else if(type == 'professional'){
+        const proDetails = await proSchema.findOneAndUpdate({_id:holderId},{$inc:{wallet:-updatedWithDrawData.accDetails.amount}})
+        res.status(200).json({message:'success'})
+        return 
+      }else{
+        res.status(500)
+      }
+
+    } catch (error) {
+      res.status(500)
+    }
+  }
+
+  //=====================List the Debited Datas =======================================
+      
+
+ module.exports={BookingDetails,bookingExist,getUserBooking,cancelBooking,
+                listAllBooking,proBookings,walletdetails,withDrawelRequest,getWithdrawelRequest,updateWithdrawel}

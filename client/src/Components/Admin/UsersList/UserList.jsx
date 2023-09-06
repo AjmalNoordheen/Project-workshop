@@ -15,12 +15,12 @@ const UserList = ({ details, setCount, count, type }) => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-8">
-      <div className="overflow-y-hidden rounded-lg border">
+    <div className="mx-auto max-w-screen flex justify-center bg-slate-300 px-4 py-8 sm:px-8">
+      <div className="overflow-y-hidden w-11/12 rounded border">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-blue-400 text-left text-xs font-semibold uppercase tracking-widest text-white">
+              <tr className="bg-blue-700 text-left text-xs font-semibold uppercase tracking-widest text-white">
                 <th className="px-5 py-3">ID</th>
                 <th className="px-5 py-3">Full Name</th>
                 <th className="px-5 py-3">E-mail</th>
@@ -35,7 +35,7 @@ const UserList = ({ details, setCount, count, type }) => {
                 details.map((item, index) => {
                   return (
                     <tr key={item._id} className="bg-white border-b">
-                      <td className="p-6">
+                      <td className="px-6 ">
                         {/* Add the image element to display the profile image */}
                         <img
                           src={item.image?item.image:'/profileimage.png'}
@@ -90,7 +90,7 @@ const UserList = ({ details, setCount, count, type }) => {
             </tbody>
           </table>
         </div>
-        <div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
+        <div className="flex flex-col items-center border-t bg-white px-5 py-2 sm:flex-row sm:justify-between">
           <span className="text-xs text-gray-600 sm:text-sm">
             {/* Showing 1 to {details.length} of {count} Entries */}
           </span>

@@ -26,6 +26,9 @@ router.get('/loadChat',check.isBlocked,auth.verifyToken,chatController.loadChat)
 router.post('/addMessage',chatController.addMessage)
 router.get('/listChat',chatController.listChat)
 router.get('/fetchMessages',chatController.fetchMessages)
+router.get('/walletdetails',check.isBlocked,auth.verifyToken,bookingController.walletdetails)
+router.post('/withDrawelRequest',check.isBlocked,auth.verifyToken,bookingController.withDrawelRequest)
+// router.get('/debitedDatas',bookingController.debitedDatas)
 
 
 module.exports=router

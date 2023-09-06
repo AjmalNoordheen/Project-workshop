@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import React from 'react'
 import SignUp from '../Pages/proffesional/SignUp'
 import Loginpro from '../Pages/proffesional/Loginpro'
@@ -9,6 +9,8 @@ import Profile from '../Pages/proffesional/Profile'
 import ProBookings from '../Pages/proffesional/ProBookings'
 import OtpCompletedBooking from '../Pages/proffesional/OtpCompletedBooking'
 import { useSelector } from 'react-redux'
+import Wallet from '../Components/ReuseItems/Wallet'
+import ProWallet from '../Pages/proffesional/ProWallet'
 
 function ProfRoutes() {
   const token = useSelector((store)=>store.Proffessional.Token)
@@ -16,13 +18,15 @@ function ProfRoutes() {
     <>
     <Routes>
         <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/login'  element={token?<ProHome/>:<Loginpro/>}/>
+        <Route path='/login'  element={token?<Navigate to={'/proffesional/prohome'}/>:<Loginpro/>}/>
         <Route path='/otplogin'  element={<OtpLogin/>}/>
-        <Route path='/prohome'  element={token?<ProHome/>:<Loginpro/>}/>
-        <Route path='/proChats'  element={token?<Chats/>:<Loginpro/>}/>
-        <Route path='/profile'  element={token?<Profile/>:<Loginpro/>}/>
-        <Route path='/bookings'  element={token?<ProBookings/>:<Loginpro/>}/>
-        <Route path='/otpbookings'  element={token?<OtpCompletedBooking/>:<Loginpro/>}/>
+        <Route path='/prohome'  element={token?<ProHome/>:<Navigate to={'/proffesional/login'}/>}/>
+        <Route path='/proChats'  element={token?<Chats/>:<Navigate to={'/proffesional/login'}/>}/>
+        <Route path='/profile'  element={token?<Profile/>:<Navigate to={'/proffesional/login'}/>}/>
+        <Route path='/bookings'  element={token?<ProBookings/>:<Navigate to={'/proffesional/login'}/>}/>
+        <Route path='/otpbookings'  element={token?<OtpCompletedBooking/>:<Navigate to={'/proffesional/login'}/>}/>
+        <Route path="/wallet" element={<ProWallet/>} />
+
     </Routes>
     </>
 

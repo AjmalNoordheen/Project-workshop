@@ -71,32 +71,23 @@ const fetchMessages = async(req,res)=>{
     }
 }
 
-// ==============================addMessage or send MEssage==================
-const addMessage = async(req,res)=>{
+// ============================== addMessage or send MEssage==================
+const addMessage = async(message,chatId)=>{
     try {
-        const {message,chatId,UserDataEmail,userType} = req.body
-        let  UserData
-        if(userType=='user'){
-            UserData = await UserSchema.findOne({email:UserDataEmail})
-        }else{
-            UserData = await proSchema.findOne({email:UserDataEmail})
-        }
         const updateChat = await chatSchema.updateOne({_id:chatId},{$push:{
             messages:{
-                text:message,
-                senderType:userType,
-                senderId:UserData._id,
+                text:message.text,
+                senderType:message.senderType,
+                senderId:message.senderId,
+                receiverId:message.receiver,
+                timestamp:message.timestamp
             }
         }})
-        if(updateChat){
-            const chat = await chatSchema.findOne({_id: chatId})
-            res.json(chat)
-        }
     } catch (error) {
         console.log(error);
     }
 }
-// =====================listChat==================
+// ===================== listChat ==================
 
 const listChat = async(req,res)=>{
     try {

@@ -29,10 +29,7 @@ function Chats({pro,fun}) {
   
   const Axios=senderType === 'professional'?proAxios:userAxios
 
-  console.log(timeStamp,'oooooooooooooooooooooooooooo');
   useEffect(() => {
-
-
       Axios.get(`/listChat?id=${senderData._id}&senderType=${senderType}&proId=${pro}`).then((res) => {
         setChatList(res.data.list);
       });
@@ -112,7 +109,7 @@ function Chats({pro,fun}) {
           {/* <h1 className="text-xl m-[3%]">Chats</h1> */}
 		  <NavBar/>
       <div className="flex h-screen full antialiased justify-center items-center text-gray-800">
-        <ChatList chatList={chatList} setReceiver={setReceiver} type={senderType} />
+        <ChatList chatList={chatList} setReceiver={setReceiver} timeStamp={new Date(timeStamp)} type={senderType} />
         {/* </div> */}
         <div className="sm:flex sm:flex-row h-full w-11/12 overflow-x-hidden">
           <div className="flex flex-col flex-auto h-full p-6 ">
@@ -133,7 +130,7 @@ function Chats({pro,fun}) {
                               <div className="flex items-center justify-start flex-row-reverse">
                                 <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
                                   <img
-                                    src={"/profileimage.png"}
+                                    src={senderData.image}
                                     alt="Avatar"
                                     className="h-full w-full rounded-full"
                                   />
@@ -160,6 +157,7 @@ function Chats({pro,fun}) {
                             <div className="col-start-1 col-end-7 p-3 rounded-lg">
                               <div className="flex flex-row items-center">
                                 <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                                  {console.log(message)}
                                   <img
                                     src={"/profileimage.png"}
                                     alt="Avatar"

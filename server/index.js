@@ -7,6 +7,7 @@ const userRouter = require("./routers/userRouter");
 const proRouter = require("./routers/proffesionalRoute");
 const adminrouter = require("./routers/adminRouter");
 const socketIo = require("socket.io");
+const chatController = require('./controller/chatController')
 
 const cookieParser = require("cookie-parser");
 app.use(cors());
@@ -35,18 +36,17 @@ const io = socketIo(server, {
 io.of("/chat").on("connection", (socket) => {
 	socket.on("setup", (chatId) => {
 		socket.join(chatId);
-		console.log("connected", chatId);
 	});
 
 	socket.on("newMessage", (message, chatId) => {
 		console.log("mEssage recieved", message, "on ", chatId);
 		io.of("/chat").emit("messageResponse", message, chatId);
-
-		console.log("sended");
+		chatController.addMessage(message,chatId)
+		// console.log(message,chatId);
 	});
 
 	socket.on("read", (timestamp, chatId,senderId) => {
-		console.log('first', timestamp, senderId, chatId  	)
+		// console.log('first', timestamp, senderId, chatId  	)
 		io.of("/chat").emit("readResponse", timestamp, chatId,senderId);
 	});
 });

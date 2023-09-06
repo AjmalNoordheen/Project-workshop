@@ -7,7 +7,7 @@ export const ClientAuth = createSlice({
         userName : null,
         email    : null,
         userData : null,
-        id : null,
+        id       : null,
     },
     reducers:{
         ClientLogin(state,action){

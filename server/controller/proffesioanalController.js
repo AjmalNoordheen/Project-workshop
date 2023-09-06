@@ -371,7 +371,6 @@ const proProfile = async(req,res)=>{
       }
         // CANCELLED BOOKINGS
       else if(request=='cancelled'){
-        console.log("JIII");
         const requests = await BookingSchema.find({mechanic:id,status:'cancelled',request:'Rejected'}).populate('user').populate('mechanic')
         if(requests){
           res.json({status:'success',bookingDetails:requests})
@@ -381,7 +380,6 @@ const proProfile = async(req,res)=>{
       }
       // COMPLETED BOOKINGS
       else if(request=='completed'){
-        console.log("JIII");
         const requests = await BookingSchema.find({mechanic:id,status:'completed'}).populate('user').populate('mechanic')
         if(requests){
           res.json({status:'success',bookingDetails:requests})
@@ -421,9 +419,14 @@ const proProfile = async(req,res)=>{
         //  creation of transaction
 
          const transaction = await transactionSchema.create({
-              PaymentType:'in',
+              PaymentType:'credit',
               date:new Date(),
-              bookingId:id
+              bookingId:id,
+              date:new Date(),
+              type:'user',
+              userId:updatedBooking.user._id,
+              professional:updatedBooking.mechanic
+
          })
 
           if(updatedBooking && usersss){
@@ -436,16 +439,19 @@ const proProfile = async(req,res)=>{
           $unset: {
             unSavedDate: 1 // Set to 1 to indicate that you want to remove the field
           }}).populate('mechanic')
-console.log(updatedBooking.mechanic._id,'IDDDDDD');
           const proffessional = await proSchema.updateOne({_id:updatedBooking.mechanic._id},{$inc:{
             wallet:updatedBooking.fees
           }})
 
           console.log(proffessional,'PROFFESSIONAL');
           const transaction = await transactionSchema.create({
-            PaymentType:'in',
+            PaymentType:'credit',
             date:new Date(),
-            bookingId:id
+            bookingId:id,
+            type:'professional',
+            userId:updatedBooking.user,
+            professional:updatedBooking.mechanic._id
+
           })
 
           if(updatedBooking&&proffessional){

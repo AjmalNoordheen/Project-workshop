@@ -43,7 +43,6 @@ const verifyToken = async (req, res, next) => {
         res.json({status:false,token:false, message: "Authentication failed: no token provided." });
       }
     } catch (error) {
-      console.log(error,'okkkkk-------=-=========================');
       return res
         .json({status:false,message: "Authentication failed: invalid token." });
     }

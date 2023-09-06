@@ -24,5 +24,9 @@ prorouter.get('/proProfile',auth.verifyProToken,proController.proProfile)
 prorouter.patch('/updateEditPro',upload.single('file'),proController.updateEditPro) 
 prorouter.get('/getProBookings',auth.verifyProToken,proController.proBookings) 
 prorouter.patch('/updateBookingStatus',auth.verifyProToken,proController.updateBookingStatus) 
+prorouter.get('/walletdetails',bookingController.walletdetails)
+prorouter.post('/withDrawelRequest',bookingController.withDrawelRequest)
+
+
 
 module.exports=prorouter

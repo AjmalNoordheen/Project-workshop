@@ -1,19 +1,12 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { AdminLogout } from '../../../Redux/AdminState'
 
 
-const navigation = [
-  { name: 'DashBoard', href: '/admin/dashbord', current: true },
-  { name: 'Types', href: '/admin/listtypes', current: false },
-  { name: 'Booking', href: '#', current: false },
-  { name: 'Users', href: '/admin/userlist', current: false },
-  { name: 'Work-Shops', href: '/admin/workshop', current: false },
-  { name: 'Freelancers', href: '/admin/freelancer', current: false },
-]
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -24,6 +17,15 @@ export default function Example() {
   const userName  = useSelector((Store)=>Store.Admin.userName)
   const dispatch  = useDispatch()
   const navigate  = useNavigate()
+
+  const navigation = [
+    { name: 'DashBoard', href: '/admin/dashbord', current: false },
+    { name: 'Types', href: '/admin/listtypes', current: false },
+    // { name: 'Booking', href: '#', current: false },
+    { name: 'Users', href: '/admin/userlist', current: false },
+    { name: 'Work-Shops', href: '/admin/workshop', current: false },
+    { name: 'Freelancers', href: '/admin/freelancer', current: false },
+  ]
     
   const SignOut=()=>{
     dispatch(AdminLogout())
@@ -60,7 +62,7 @@ export default function Example() {
                     {navigation.map((item) => (
                       <a
                         key={item.name}
-                        href={item.href}
+                        onClick={()=>navigate(item.href)} 
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
@@ -103,34 +105,25 @@ export default function Example() {
                           </a>
                         )}
                       </Menu.Item>
+                     
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <Link
+                            to={"/admin/withdrawreq"}
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
-                            Your Profile
-                          </a>
+                            Requests
+                          </Link>
                         )}
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a 
+                          <Link 
                             onClick={SignOut}
                             href="#"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 ')}
                           >Sign out
-                          </a>
+                          </Link>
                         )}
                       </Menu.Item>
                     </Menu.Items>
@@ -154,7 +147,7 @@ export default function Example() {
                 <Disclosure.Button
                   key={item.name}
                   as="a"
-                  href={item.href}
+                  onClick={()=>navigate(item.href)} 
                   className={classNames(
                     item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'

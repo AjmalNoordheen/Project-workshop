@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ChatList = ({chatList, setReceiver,type}) => {
+const ChatList = ({chatList, setReceiver,type,timestamp}) => {
   return (
     <div className="w-5/12 h-[92%] flex justify-center items-center rounded-lg bg-gray-300 ml-2 ">
           <div className="h-[90%]  overflow-scroll w-[96%]  bg-gray-200">
@@ -41,6 +41,8 @@ const ChatList = ({chatList, setReceiver,type}) => {
                             ).toLocaleDateString()
                            }
                       </p>{" "}
+                      {/* <small>{list.messages.length?new Date( list.messages[list.messages.length - 1].timestamp) < timestamp ? 'read' : 'unread':""}</small> */}
+
                       {/* <div className="border mt-[50%]  rounded-full w-[40%] text-center text-xs font-bold bg-green-600 text-white h-[26%]">
 												1
 											</div> */}

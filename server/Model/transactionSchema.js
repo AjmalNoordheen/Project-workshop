@@ -5,9 +5,8 @@ const transactionSchema = new mongoose.Schema({
       PaymentType: {
         type: String,
       },
-    //   At withdrawel time there will be no Booking Id so we insert userId
-      holder:{ 
-        type:String
+      withdrawStatus:{ 
+        type:String,
       },
       date: {
         type: Date,
@@ -16,13 +15,38 @@ const transactionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "bookings",
       },
-      accDetails: [
+      userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'users'
+      },
+      professional:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'mechanics'
+      },
+      type:{
+        type:String
+      },
+      accDetails: 
         {
           accNo: {
             type: Number,
           },
-        },
-      ],    
+          holderName:{
+            type:String
+          },
+          bankName:{
+            type:String
+          },
+          ifsc:{
+            type:String
+          },
+          branch:{
+            type:String
+          },
+          amount:{
+            type:Number
+          }
+        },    
 })
 
 const transactinModel = mongoose.model("transactions", transactionSchema);
