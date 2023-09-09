@@ -12,6 +12,10 @@ const AdminShema=  new mongoose.Schema({
     isAdmin:{
         type:Boolean,
         default:false
+    },
+    profit:{
+        type:Number,
+        default:0
     }
     
 })

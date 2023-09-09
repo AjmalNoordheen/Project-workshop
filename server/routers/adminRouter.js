@@ -15,6 +15,8 @@ adminrouter.get('/getProfessionals',auth.verifyAdminToken,adminController.listFr
 adminrouter.get('/getMechanic',auth.verifyAdminToken,adminController.getMechanic)
 adminrouter.get('/getWithdrawelRequest',auth.verifyAdminToken,bookingController.getWithdrawelRequest)
 adminrouter.patch('/updateWithdrawel',auth.verifyAdminToken,bookingController.updateWithdrawel)
+adminrouter.get('/getDashbordDetails',auth.verifyAdminToken,adminController.getDashbordDetails)
+
 
 
 

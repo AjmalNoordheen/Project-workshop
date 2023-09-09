@@ -24,8 +24,9 @@ function Wallet() {
       ? store.Proffessional.proData
       : store.Client.userData
   );
-
+console.log(senderData)
   useEffect(() => {
+   if(senderData){
     BaseAxois.get(
       `/walletdetails?senderData=${senderData._id}&type=${type}`
     ).then((res) => {
@@ -34,6 +35,7 @@ function Wallet() {
         setTransaction(res.data.transactions);
       }
     });
+   }
   }, []);
 
 // const debitedData =async(req,res)=>{
@@ -56,7 +58,7 @@ function Wallet() {
                 <div className="flex justify-between">
                   <div>
                     <p className="font-light text-xs">Name</p>
-                    <p className="font-medium tracking-widest">{senderData.name}</p>
+                    <p className="font-medium tracking-widest">{senderData?senderData.name:''}</p>
                   </div>
                   <img className="w-[5rem] h-[5rem]" src="/sim1.png" alt="Card Logo" />
                 </div>
@@ -67,7 +69,7 @@ function Wallet() {
                 <div className="pt- pr-6">
                   <div className="flex justify-between ">
                     <div>
-                      <p className="font-light text-xs">{senderData.email}</p>
+                      <p className="font-light text-xs">{senderData?senderData.email:''}</p>
                       <p className="font-medium tracking-wider text-sm"></p>
                     </div>
                 
@@ -97,7 +99,7 @@ function Wallet() {
                 <div className="flex w-10/12 h-[12%] mt-2 items-end justify-between ">
                   <div className="flex gap-2">
                     <button className="bg-slate-300 px-5 py-1 hover:bg-slate-200  rounded-xl font-semibold">
-                      Credited
+                      Transactions
                     </button>
                     {/* <button onClick={debitedData} className="bg-slate-300 px-5 py-1 rounded-xl hover:bg-slate-200 font-semibold">
                       Debited
@@ -106,7 +108,7 @@ function Wallet() {
                 </div>
                 {transaction.map((item) => (
                   <>
-                    <div className="w-[85%] h-[15%] flex  border justify-evenly items-center rounded bg-white">
+                    <div className="w-[85%] h-[18%] flex  border justify-evenly  items-center rounded bg-white">
                       <img
                         src="/Ellipse20.png"
                         className="h-[70%] w-[8%]"
@@ -141,7 +143,7 @@ function Wallet() {
                         <small className="font-bold text-xs  text-slate-400">Id : {item._id}</small>
                       </div>
                       <div>
-                        <p className="font-bold text-slate-900">+{item.professional.fees}</p>
+                        <p className="font-bold text-lg text-slate-900">+{type=='user'?item.professional.fees:item.professional.fees-(item.professional.fees*20)/100}</p>
                       </div>
                     </div>
                   </>

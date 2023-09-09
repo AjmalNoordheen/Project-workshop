@@ -1,6 +1,12 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
-const ChatList = ({chatList, setReceiver,type,timestamp}) => {
+const ChatList = ({chatList, setReceiver,type,timestamp,show}) => {
+  const location = useLocation()
+  const senderType = location.pathname.includes('proffesional') ? 'professional' : 'user'
+const senderData = useSelector((store) => senderType === 'professional' ?   store.Proffessional.proData : store.Client.userData);
+
   return (
     <div className="w-5/12 h-[92%] flex justify-center items-center rounded-lg bg-gray-300 ml-2 ">
           <div className="h-[90%]  overflow-scroll w-[96%]  bg-gray-200">
@@ -23,13 +29,14 @@ const ChatList = ({chatList, setReceiver,type,timestamp}) => {
                     />
                     <div className="overflow-hidden ml-3 h-[60%]  w-full">
                       <h1 className="font-bold">{type=='professional' ?list?.user?.name : list.professional.name}</h1>
-                      <small className="w-[100%]">
-                        {list.messages
+                     
+                        {/* {list.messages
                           ? list.messages[list.messages.length - 1]
                             ? list.messages[list.messages.length - 1].text
                             : ""
-                          : ""}
-                      </small>
+                          : ""} */}
+                        {show.receiver == list._id ?  <small className="w-[100%]">{show.text}</small>:''}
+                     
                     </div>
                     <div className="md:mr-[2%] text-end w-full flex-col h-full">
                       <p className="text-xs">

@@ -26,15 +26,17 @@ function UserLogin() {
               return
             }
             const result = res.data.userSignUp;
-
             if (result.Status) {
-              const token = result.token;
-              const name = result.name;
-              const email = result.email;
+              
+              const token = res.data.userSignUp.token;
+              const name = res.data.userSignUp.name;
+              const email = res.data.userSignUp.email;
               const user = res.data.user;
+              
+              console.log(user ,'success')
 
 
-              dispatch(ClientLogin({ token: token }));
+              dispatch(ClientLogin({token: token }));
               dispatch(ClientName({ name: name }));
               dispatch(ClientEmail({ email: email }));
               dispatch(ClientData({ userData: user }));
@@ -43,7 +45,7 @@ function UserLogin() {
             }
           })
           .catch((error) => {
-            generateError(error);
+          console.log(error)
           });
       };
 
@@ -75,6 +77,7 @@ function UserLogin() {
               const name = res.data.userSignUp.name;
               const email = res.data.userSignUp.email;
               const user = res.data.user;
+
               dispatch(ClientLogin({ token: token }));
               dispatch(ClientName({ name: name }));
               dispatch(ClientEmail({ email: email }));
@@ -181,9 +184,7 @@ function UserLogin() {
                       : undefined;
                     if (payload) {
                       sendDetails(payload);
-                    } else {
-                      console.log("haaaa");
-                    }
+                    } 
                   }}
                   onError={(error) => console.log(error)}
                   useOneTap

@@ -8,9 +8,10 @@ const proSchema   = require('../Model/mechanicSchema')
 const adminLogin = async(req,res)=>{
     try {
        const data = req.body
-       const user = await adminSchema.findOne({email:data.email})     
+       const user = await adminSchema.findOne({email:data.email}) 
+ 
        if(user){
-           if(user.password==data.rpassword){
+           if(user.password == data.rpassword){
                if(user.isAdmin){
             let userSignUp={
                 Status: false,
@@ -43,7 +44,6 @@ const adminLogin = async(req,res)=>{
 
 const blockuser = async(req,res)=>{
     try {
-        console.log(req.body.type)
         if(req.body.type=='user'){
             const user = await UserSchema.findOne({_id:req.body.userid})
             if(user.isBlocked==false){
@@ -74,9 +74,7 @@ const blockuser = async(req,res)=>{
 const listType =async (req,res)=>{
     try {
         const {typeList} = req.body
-        console.log(typeList);
         const duplicate = await typeSchema.findOne({name:typeList})
-        console.log(duplicate);
         if(duplicate){
             res.json({status:false,message:'Category already exists'})
         }else{
@@ -130,7 +128,6 @@ const listType =async (req,res)=>{
      const editType = async(req,res)=>{
         try {
          const edited = req.query
-         console.log(edited.oldData);
         
          const duplicate =  await typeSchema.findOne({name:edited.newData})
          if(duplicate){
@@ -154,7 +151,6 @@ const listType =async (req,res)=>{
 
   const listUsers = async(req,res)=>{
     try {
-      // console.log(req.user._id);
       const userList = await UserSchema.find()
       if(userList){
         res.status(200).json({userList})
@@ -171,7 +167,6 @@ const listType =async (req,res)=>{
 const listFreelancer = async(req,res)=>{
     try {
       const Freelancer = await proSchema.find({work:'freelancer'}).populate('types')
-      console.log(Freelancer.types);
       if(Freelancer){
         res.status(200).json({Freelancer})
       }else{
@@ -192,6 +187,22 @@ const listFreelancer = async(req,res)=>{
       
     }
   }
+
+   //===================== GetDashbordDetails =======================================
+   const getDashbordDetails = async(req,res)=>{
+    try {
+      const userDetails = await UserSchema.find().count()
+      const freelancers = await proSchema.find({work:'freelancer'}).count()
+      const workShop = await proSchema.find({work:'workshop'}).count()
+      const profit = await adminSchema.findOne()
+
+      res.json({user:userDetails,pro:freelancers,workShop:workShop,profit:profit})
+
+    } catch (error) {
+      res.status(500)
+    }
+  }
+
 module.exports={adminLogin,blockuser,listType,
                 deleteType,displayType,editType,listUsers,
-                listFreelancer,getMechanic}
+                listFreelancer,getMechanic,getDashbordDetails}

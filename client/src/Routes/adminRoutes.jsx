@@ -8,6 +8,7 @@ import ProView from '../Pages/Admin/WorkShop'
 import FreelancerView from '../Pages/Admin/FreelancerView'
 import { useSelector } from 'react-redux'
 import WithdrawRequest from '../Pages/Admin/WithdrawRequest'
+import Errorpage from '../Components/ReuseItems/Errorpage'
 
 function AdminRoutes() {
   const token = useSelector((store)=>store.Admin.Token)
@@ -21,6 +22,7 @@ function AdminRoutes() {
     <Route path='/freelancer' element={token?<FreelancerView/>:<Navigate to={'/admin/login'}/>}/>
     <Route path='/listtypes' element={token?<ListtypesPage/>:<Navigate to={'/admin/login'}/>}/>
     <Route path="/withdrawreq" element={<WithdrawRequest/>} />
+    <Route  element={<Errorpage/>}/>
 
     </Routes>
     </>

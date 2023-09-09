@@ -20,6 +20,8 @@ function Chats({pro,fun}) {
   const [message, setMessage] = useState('');
   const [timeStamp, setTimeStamp] = useState(Date.now());
   
+  const [showMes,setShowMes] = useState('')
+
   const messageHolder = useRef(null);
 
   const location = useLocation()
@@ -49,7 +51,9 @@ function Chats({pro,fun}) {
       socket.emit("setup", receiver);
       socket.emit('read',timeStamp,receiver,senderData._id)
       socket.on("messageResponse", (message, receivedChatId) => {
-
+       if(message){
+        setShowMes(message)
+       }
         if (receiver === receivedChatId) {
             setMessages((prevMessages) => [...prevMessages, message]);
             socket.emit('read',Date.now(),receiver,senderData._id)
@@ -57,7 +61,6 @@ function Chats({pro,fun}) {
         }
       });
       socket.on('readResponse',(timestamp,chatId,senderId)=>{
-        console.log(timestamp,'timeetamppop');
         if (receiver === chatId) {
           if(senderId != senderData._id)
           setTimeStamp(timestamp)
@@ -109,7 +112,7 @@ function Chats({pro,fun}) {
           {/* <h1 className="text-xl m-[3%]">Chats</h1> */}
 		  <NavBar/>
       <div className="flex h-screen full antialiased justify-center items-center text-gray-800">
-        <ChatList chatList={chatList} setReceiver={setReceiver} timeStamp={new Date(timeStamp)} type={senderType} />
+        <ChatList chatList={chatList} show={showMes} setReceiver={setReceiver} timeStamp={new Date(timeStamp)} type={senderType} />
         {/* </div> */}
         <div className="sm:flex sm:flex-row h-full w-11/12 overflow-x-hidden">
           <div className="flex flex-col flex-auto h-full p-6 ">

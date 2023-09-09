@@ -5,12 +5,16 @@ import { useDispatch } from "react-redux";
 import {ProfessionalData, ProfessionalEmail,ProfessionalLogin,ProfessionalName} from '../../Redux/ProState'
 import {GoogleLogin} from '@react-oauth/google'
 import { toast } from "react-toastify";
+import {decodeJwt} from "jose";
 
 const LoginForm = () => {
     const nameref = useRef();
     const passwordref = useRef();
+
     const navigate = useNavigate()
+
     const dispatch = useDispatch()
+
     const ProAxios = createAxiosInstance()
     
    
@@ -25,12 +29,11 @@ const LoginForm = () => {
         if (res.data.status === false) {
           toast.error(res.data.message)
         } else {
+
           const token = res.data.userSignUp.token;
           const name = res.data.userSignUp.name;
           const email = res.data.userSignUp.email;
-          console.log(res.data.userSignUp.email);
-          const proId = res.data.userSignUp.proId
-          console.log(email);
+
           dispatch(ProfessionalLogin({token:token}));
           dispatch(ProfessionalName({ userName: name }));
           dispatch(ProfessionalEmail({email: email }));
@@ -47,16 +50,20 @@ const LoginForm = () => {
 
     const sendDetails =(payload)=>{    
       ProAxios.post('/progoogleMail',payload).then((res)=>{
-          const result = res.data.userSignUp
-        if(result.Status){
+          
+        const result = res.data.userSignUp
+       
+          if(result.Status){
           const token = result.token
           const name =  result.name
-        dispatch(ProfessionalLogin({token:token}))
+        
+         dispatch(ProfessionalLogin({token:token}))
         dispatch(ProfessionalName({userName:name}))
         dispatch(ProfessionalEmail({email:result.email}))
+        
         navigate('/proffesional/prohome')
         }else{
-          console.log(res.data);
+          toast.error(res.data.userSignUp.message)
         }
       }).catch((error)=>{
           console.log(error);
@@ -69,8 +76,6 @@ const LoginForm = () => {
     <div className="font-sans ">
       <div className="relative min-h-screen flex flex-col sm:justify-center items-center bg-slate-800 ">
         <div className="relative sm:max-w-sm w-full">
-          {/* <div className="card bg-blue-600 shadow-lg  w-full h-full rounded-3xl absolute  transform -rotate-6"></div> */}
-          {/* <div className="card bg-red-400 shadow-lg  w-full h-full rounded-3xl absolute  transform rotate-6"></div> */}
           <div className="relative w-full rounded-3xl backdrop-blur px-6 py-4 bg-gray-100 shadow-md">
             <label htmlFor="" className="block mt-3 text-sm text-gray-700 text-center font-semibold">
               Login
@@ -94,26 +99,6 @@ const LoginForm = () => {
                   className="mt-3 block w-full border text-center bg-gray-200 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0"
                 />
               </div>
-
-              {/* <div className="mt-7 flex"> */}
-                {/* <label htmlFor="remember_me" className="inline-flex items-center w-full cursor-pointer">
-                  <input
-                    id="remember_me"
-                    type="checkbox"
-                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    name="remember"
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Recuerdame
-                  </span>
-                </label> */}
-{/* 
-                <div className="w-full text-right">
-                  <a className="underline text-sm text-gray-600 hover:text-gray-900" href="#">
-                    ¿Olvidó su contraseña?
-                  </a>
-                </div>
-              </div> */}
 
               <div className="mt-6">
                 <button
@@ -150,9 +135,6 @@ const LoginForm = () => {
                   const payload = credential ? decodeJwt(credential) : undefined
                   if(payload){
                     sendDetails(payload)
-                    console.log('koooooooooi');
-                  }else{
-                    console.log('haaaaaaammamaamamamm');
                   }
                 }}
                 onError={error => console.log(error)}

@@ -9,13 +9,13 @@ const fs = require('fs');
 const BookingSchema = require("../Model/BookingSchema");
 const UserSchema = require("../Model/userSchema");
 const transactionSchema = require("../Model/transactionSchema");
+const AdminShema = require('../Model/adminSchema');
 
 // ========Proffesional SignUp========= 
 
 const ProffesionalSignup = async (req, res) => {
   try {
     const { name, email, mobile, password, repassword } = req.body;
-
 
     if (password !== repassword) {
       return res.json({ status: false, message: "Passwords don't match" });
@@ -24,15 +24,13 @@ const ProffesionalSignup = async (req, res) => {
     const userDetails = await proSchema.findOne({ email: email });
     const existPhone = await proSchema.findOne({ phone: mobile });
 
+    if (existPhone) {
+      return res.json({ status: false, message: "Phone number already exists" });
+    }
+
     if (!userDetails) {
-      if (existPhone) {
-        return res.json({
-          status: false,
-          message: "Phone number already exists",
-        });
-      }
       const hashedPassword = await bcrypt.hash(password, 10);
-      const userDEtails = await proSchema.create({
+      const newUser = new proSchema({
         name: name,
         email: email,
         phone: mobile,
@@ -40,10 +38,12 @@ const ProffesionalSignup = async (req, res) => {
         isVerified: true,
       });
 
+      await newUser.save();
+
       const verifyEmail = await userController.sendVerifyMail(
-        userDEtails.name,
-        userDEtails.email,
-        userDEtails._id,
+        newUser.name,
+        newUser.email,
+        newUser._id,
         1
       );
 
@@ -53,38 +53,19 @@ const ProffesionalSignup = async (req, res) => {
           message: "Registration Success, Please Verify Your Mail",
         });
       } else {
-        await proSchema.deleteOne({ email: userDEtails.email });
+        await newUser.remove();
         return res.json({ status: false, message: "Email Not Sent" });
       }
-    } else {
-      if (userDetails.isgoogleVerified === true) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await proSchema.updateOne(
-          { email: userDetails.email },
-          {
-            $set: {
-              name: name,
-              email: email,
-              phone: mobile,
-              password: hashedPassword,
-              isVerified: true,
-            },
-          }
-        );
-        return res.json({
-          status: true,
-          message: "Registration Success, please Login",
-        });
-      } else {
-        return res.json({ status: false, message: "User already exists" });
-      }
-    
+    } 
+    else {
+      return res.json({ status: false, message: "User already exists" });
     }
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: false, message: "An error occurred" });
   }
 };
+
 
 
 // ==============Proffesional Login===========
@@ -152,23 +133,26 @@ const googleMailDetails = async (req, res) => {
         (userSignUp.message = "you are logged in"),
         (userSignUp.token = token),
         (userSignUp.name = userDetails.name);
-      res.json({ userSignUp });
-    } else {
-      const newUser = await proSchema.create({
-        name: payloadDetails.name,
-        email: payloadDetails.email,
-        isVerified: true,
-        isgoogleVerified: true,
-      });
-      const token = authToken.generateToken(newUser);
-
-      (userSignUp.Status = true),
-        (userSignUp.message = "you are logged in"),
-        (userSignUp.token = token),
-        (userSignUp.name = newUser.name);
-        userSignUp.email = userDetails.email
-
       res.json({ userSignUp,user:userDetails });
+    } else {
+      // const newUser = await proSchema.create({
+      //   name: payloadDetails.name,
+      //   email: payloadDetails.email,
+      //   isVerified: true,
+      //   isgoogleVerified: true,
+      // });
+      // const token = authToken.generateToken(newUser);
+
+      // (userSignUp.Status = true),
+      //   (userSignUp.message = "you are logged in"),
+      //   (userSignUp.token = token),
+      //   (userSignUp.name = newUser.name);
+      //   userSignUp.email = userDetails.email
+
+      // res.json({ userSignUp,user:userDetails });
+      userSignUp.Status=false
+      userSignUp.message ='Email not Registerd'
+      res.json({ userSignUp})
     }
   } catch (error) {
     console.log(error);
@@ -439,11 +423,14 @@ const proProfile = async(req,res)=>{
           $unset: {
             unSavedDate: 1 // Set to 1 to indicate that you want to remove the field
           }}).populate('mechanic')
+
+          const profit = (updatedBooking.fees * 20) / 100;
+          const proWalletamt = (updatedBooking.fees)-(profit)
           const proffessional = await proSchema.updateOne({_id:updatedBooking.mechanic._id},{$inc:{
-            wallet:updatedBooking.fees
+            wallet:proWalletamt
           }})
 
-          console.log(proffessional,'PROFFESSIONAL');
+          const Admin = await AdminShema.updateOne({},{$inc:{profit:profit}})
           const transaction = await transactionSchema.create({
             PaymentType:'credit',
             date:new Date(),

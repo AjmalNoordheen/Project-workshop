@@ -198,7 +198,7 @@ const googleMailDetails = async(req,res)=>{
   try {
    const payloadDetails =  req.body
    const userDetails   = await userSchema.findOne({email:payloadDetails.email})
-   console.log(userDetails .email);
+   console.log(userDetails,'kkkk');
 
    let userSignUp={
     Status  : false,
@@ -217,7 +217,7 @@ const googleMailDetails = async(req,res)=>{
     userSignUp.token   = token,
     userSignUp.name    = userDetails.name
     userSignUp.email   = userDetails.email
-    return  res.json({userSignUp})
+    return  res.json({userSignUp,user:userDetails})
    }else{
       const newUser    = await userSchema.create({
       name             : payloadDetails.name,

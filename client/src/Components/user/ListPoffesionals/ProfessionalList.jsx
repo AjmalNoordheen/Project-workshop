@@ -15,26 +15,29 @@ function ProfessionalList() {
   const [searchInput,SetSearchInput] = useState('')
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [show,setShow] = useState(1)
+
   const token = useSelector((store)=>store.Client.Token)
+
   const ProAxios   =  ProfessionalAxios()
   const AdminAxios =  AdminAxiosInstance()
+
   const navigate   = useNavigate()
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12; // Number of items to display per page
+
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await ProAxios.get('/getFreelancer');
         if (res.data.Freelancer) {
           SetPros(res.data.Freelancer);
-          console.log(res.data.Freelancer);
         } else {
           console.log('No Freelancer data available.');
         }
         const responce = await AdminAxios.get('/listTypes')
           if(responce.data.list){
             SetTypes(responce.data.list);
-            console.log(responce.data.list);
           }else{
             console.log('no types available');
           }
@@ -49,9 +52,7 @@ function ProfessionalList() {
   
 
  const ProDetailPage = (Proemail)=>{
-      try {
-        console.log(Proemail);
-        
+      try {        
         navigate('/proDetails',{state:Proemail})
       } catch (error) {
         console.log(error);
@@ -85,16 +86,16 @@ const filteredPros = pros.filter((pro) => {
     <NavBar data={1}/>
     </div>
       <div className="w-full h-full  bg-slate-200 ">
-        <div className="flex  justify-center">
-          <div className="flex relative top-[4.5rem] left-14">
-            <p className="text-black font-gravitas-one font-semibold text-3xl">
+        <div className=" sm:flex  justify-center">
+          <div className="sm:flex sm:relative top-[4.5rem] left-14">
+            <p className="text-black font-gravitas-one text-xl pt-2 sm:pt-0  text-center  font-semibold sm:text-3xl">
               Freelance <br /> Mechanics
             </p>
           </div>
-          <img src="freelance.png" className="w-36 drop-shadow-2xl  " alt="" />
-        <div className="rounded">
+          <img src="freelance.png" className="hidden sm:block w-36 drop-shadow-2xl  " alt="" />
+        <div className="rounded w-full sm:w-auto  flex overflow-x-hidden">
           <input type="search"  value={searchInput} onChange={(e)=>SetSearchInput(e.target.value)}  
-          className="mt-[7rem] px-3 rounded" placeholder="search your location" />
+          className="sm:mt-[7rem] px-3 m-auto   rounded" placeholder="search your location" />
         </div>
         </div>
         <div className="w-full h-full  flex flex-col sm:flex-row justify-evenly">
@@ -126,12 +127,12 @@ const filteredPros = pros.filter((pro) => {
             </div>
           </div>
           {/* Card Container */}
-          <div className="w-full sm:w-9/12 min-h-screen h-full rounded-lg border border-slate-300  overflow-scroll p-3 pb-2  grid grid-cols-1 sm:grid-cols-12 gap-x-3 bg-white">
+          <div className="w-full sm:w-9/12 min-h-screen h-full rounded-lg border border-slate-300  overflow-scroll p-3 pb-2  flex flex-col items-center sm:items-baseline sm:grid  sm:grid-cols-12 gap-x-3 bg-white">
             {/* cards */}
             
             {currentItems.filter((data)=>data.location.toLowerCase().includes(searchInput.toLowerCase())).map(items=>
               <>
-              <div key={items._id} className="h-[18rem] overflow-auto shadow-xl transform transition-transform hover:scale-10 hover: col-span-6 relative lg:col-span-4 xl:col-span-3 m-2  bg-slate-100  rounded-[15px] border border-slate-300 order-opacity-90">
+              <div key={items._id} className="h-[18rem] mx-4 sm:mx-0 overflow-auto shadow-xl  transform transition-transform hover:scale-10 w-[80%] sm:w-[98%] col-span-6 relative lg:col-span-4 xl:col-span-3  m-2  bg-slate-100  rounded-[15px] border border-slate-300 order-opacity-90">
               <div className="h-[.01rem] w-full bg-slate-300 absolute mt-11 z-0"></div>
               <div className="flex items-center">
                 <div className="rounded-full w-full flex justify-between z-10 mx-1 my-1 ">
@@ -154,7 +155,7 @@ const filteredPros = pros.filter((pro) => {
                 </div>
               </div>
               <div className="flex">
-                <h1 className="font-jockey-one font-bold text-xl ml-2 text-black">{items.name}</h1>
+                <h1 className="font-jockey-one font-bold text-xl  ml-2 text-black">{items.name}</h1>
                 <img className="h-[1.5rem]" src="/footer/tick.png" alt="img" />
               </div>
               <div className="mx-2 my-3 ">
@@ -182,10 +183,10 @@ const filteredPros = pros.filter((pro) => {
     </div>
               </div>
               <div className="flex justify-around">
-                <button type="button" onClick={()=>ProDetailPage(items.email,items._id)} className="text-sm text-white  p-2 rounded bg-[#552a9e] hover:bg-[#9661f1] hover:text-black">More Details</button>
-              {token?<button onClick={()=>setShow(items._id)} className="text-white bg-[#552a9e] p-1.5 rounded 
+                <button type="button" onClick={()=>ProDetailPage(items.email,items._id)} className="text-sm text-white px-1  sm:p-2 rounded bg-[#552a9e] hover:bg-[#9661f1] hover:text-black">More Details</button>
+              {token?<button onClick={()=>setShow(items._id)} className="text-white bg-[#552a9e] px-1 sm:p-1.5 rounded 
                hover:bg-[#9661f1] hover:text-black"><i className="fa-solid fa-message "></i> Chat</button>
-                :<button onClick={()=>toast('Login for Continue')} className="text-white bg-[#552a9e] p-1.5 rounded 
+                :<button onClick={()=>toast('Login for Continue')} className="text-white bg-[#552a9e] px-1 sm:p-1.5 rounded 
                  hover:bg-[#9661f1] hover:text-black"><i className="fa-solid fa-message "></i> Chat</button>
               }  
               </div>
@@ -207,8 +208,8 @@ const filteredPros = pros.filter((pro) => {
           </button>
         ))}
             </div>
-     <div className="w-full pr-9 pt-4 pb-8 flex justify-end">
-     <div className="bg-[url('/footer/carban.jpg')] bg-origin-content bg-repeat-round h-[20rem] w-[64rem]">
+     <div className="w-full sm:pr-9 pt-4 sm:pb-8 flex justify-end">
+     <div className="bg-[url('/footer/carban.jpg')] bg-origin-content bg-repeat-round h-[20rem]  w-[64rem]">
   <h1 className="text-white m-2 text-2xl font-josefin-sans italic font-bold">Registar as Mechanic</h1>
   <p className="text-slate-500 m-2 w-1/2 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus 
     nisi harum possimus id eligendi hic saepe, magni quia nulla repellendus 

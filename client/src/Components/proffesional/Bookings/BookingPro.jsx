@@ -13,9 +13,6 @@ function BookingPro() {
   const [spin,setSpin] = useState(false)
   const [booking, setBooking] = useState([]);
   const [requests, setRequests] = useState(true);
-  const [pending, setPending] = useState(false);
-  const [complete, setCompleted] = useState(false);
-  const [cancel, setCancelled] = useState(false);
   const [color, setColor] = useState(0);
   const [bookingId, setBookingId] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -27,13 +24,11 @@ function BookingPro() {
       .get(`/getProBookings?id=${proData._id}&request=${"requested"}`)
       .then((res) => {
         if (res.data.status === "success") {
-          console.log("kkkkk");
           setBooking(res.data.bookingDetails);
-          console.log(res.data.bookingDetails);
           setRequests(false);
         }
       });
-  }, [pending, cancel, complete,load,requests]);
+  }, [load,requests]);
 
   
 const accepted = async(id)=>{
@@ -47,7 +42,7 @@ const accepted = async(id)=>{
             setLoad(load+1)
         }
     } catch (error) {
-        
+        console.log(error)
     }
     
 }
@@ -59,7 +54,6 @@ const pendingBookings = async()=>{
       .then((res) => {
         if (res.data.status === "success") {
           setBooking(res.data.bookingDetails);
-          console.log(res.data.bookingDetails);
           setRequests(false)
         }
       });
@@ -95,7 +89,6 @@ const cancelledBooking = ()=>{
       .then((res) => {
         if (res.data.status === "success") {
           setBooking(res.data.bookingDetails);
-          console.log(res.data.bookingDetails);
           setRequests(false)
         }
       });
@@ -173,7 +166,7 @@ const completedBooking =()=>{
                 Cancelled
               </button>
             </div>
-            <DeleteAccountModal/>
+            {/* <DeleteAccountModal/> */}
 
             {booking.length > 0
               ? booking.map((item) => (

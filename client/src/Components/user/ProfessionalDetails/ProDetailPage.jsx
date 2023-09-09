@@ -47,7 +47,6 @@ function ProDetailPage({email}) {
   useEffect(()=>{
          userAxios.get(`/bookingExist?email=${email}`).then((res)=>{
           if(res.data.message=='blocked'){
-            // toast.error('Account is blocked ')
               navigate('/login')
             return
           }else if(res.data.message=="Authentication failed: invalid token."){
@@ -56,7 +55,6 @@ function ProDetailPage({email}) {
         if(res.data.unSavedDates){
           setExsit(1)
           setExistDate(res.data.unSavedDates)
-          console.log(existDate);
         }else{
           toast.error(res.data.status)
         }
@@ -76,8 +74,6 @@ function ProDetailPage({email}) {
   }
 
  useEffect(()=>{
-  // const today = new Date()
-  // const todaynew = today.toISOString();
   if(existDate.includes(new Date().toISOString())){
     setAvailable(false)
   }

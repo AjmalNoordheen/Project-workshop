@@ -94,7 +94,7 @@ const getUserBooking = async (req,res)=>{
     const cancelBooking = async (req,res)=>{
         try {
             const {id} = req.query
-            const updatedData = await bookingSchema.updateOne({_id:id},{$set:{status:'cancelled'},$unset:{unSavedDate:1}}) 
+            const updatedData = await bookingSchema.updateOne({_id:id},{$set:{status:'cancelled',request:'Rejected'},$unset:{unSavedDate:1}}) 
             if(updatedData){
                 res.status(200).json({message:'success'})
             }else{
@@ -278,8 +278,7 @@ const getWithdrawelRequest = async(req,res)=>{
     }
   }
 
-  //=====================List the Debited Datas =======================================
-      
+ 
 
  module.exports={BookingDetails,bookingExist,getUserBooking,cancelBooking,
                 listAllBooking,proBookings,walletdetails,withDrawelRequest,getWithdrawelRequest,updateWithdrawel}

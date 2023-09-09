@@ -11,6 +11,7 @@ import OtpCompletedBooking from '../Pages/proffesional/OtpCompletedBooking'
 import { useSelector } from 'react-redux'
 import Wallet from '../Components/ReuseItems/Wallet'
 import ProWallet from '../Pages/proffesional/ProWallet'
+import Errorpage from '../Components/ReuseItems/Errorpage'
 
 function ProfRoutes() {
   const token = useSelector((store)=>store.Proffessional.Token)
@@ -26,6 +27,7 @@ function ProfRoutes() {
         <Route path='/bookings'  element={token?<ProBookings/>:<Navigate to={'/proffesional/login'}/>}/>
         <Route path='/otpbookings'  element={token?<OtpCompletedBooking/>:<Navigate to={'/proffesional/login'}/>}/>
         <Route path="/wallet" element={<ProWallet/>} />
+        <Route  element={<Errorpage/>}/>
 
     </Routes>
     </>

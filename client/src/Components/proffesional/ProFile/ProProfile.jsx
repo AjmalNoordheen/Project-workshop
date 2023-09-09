@@ -37,7 +37,7 @@ function ProProfile() {
     }).catch((err)=>{
       console.log(err);
     })
-  },[])
+  },[modal])
   console.log(prof);
   return (
     <>

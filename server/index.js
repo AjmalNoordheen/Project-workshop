@@ -42,11 +42,9 @@ io.of("/chat").on("connection", (socket) => {
 		console.log("mEssage recieved", message, "on ", chatId);
 		io.of("/chat").emit("messageResponse", message, chatId);
 		chatController.addMessage(message,chatId)
-		// console.log(message,chatId);
 	});
 
 	socket.on("read", (timestamp, chatId,senderId) => {
-		// console.log('first', timestamp, senderId, chatId  	)
 		io.of("/chat").emit("readResponse", timestamp, chatId,senderId);
 	});
 });

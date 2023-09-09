@@ -3,21 +3,21 @@ import interceptor from '../../Axios/userAxios'
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteAccountModal = ({fun, isOpen, closeModal,id}) => {
+const DeleteAccountModal = ({fun, isOpen, closeModal,id,cancel}) => {
   const [loader,setLoader] = useState(false)
     const userAxios = interceptor()
     const cancelBooking = async()=>{
         try {
           setLoader(true)
           const res = await userAxios.patch(`/cancelBooking?id=${id}`)
-          console.log(res.data);
+
           if(res.data.message=='success'){ 
             toast.success('succesfully Cancelled  the booking')
               closeModal()
-                fun(true)
+                fun(cancel+1)
                 setLoader(false)
             }else{
-              console.log('hmmmm');
+              toast.error('something Went Wrong');
             }
           
         } catch (error) {
