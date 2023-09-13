@@ -116,20 +116,20 @@ const completedBooking =()=>{
     <>
 
 
-
-      <div className="flex flex-col h-auto pt-3 overflow-scroll">
-        <h1 className="text-3xl font-bold text-center mt-4">
+<div className="flex flex-col min-h-screen h-full bg-slate-200 pb-4 pt-3 sm:overflow-y-scroll">
+<div className="w-full">
+ <h1 className="text-2xl font-bold text-center mt-1">
           Booking History
         </h1>
-        <div className="mt-5">
-          <div className="flex-col rounded-lg h-full shadow-lg p-2 max-w-6xl backdrop-blur-2xl bg-opacity-40 mx-auto border border-white bg-slate-300">
-            <div className="w-full h-fit py-2 flex gap-2 font-semibold items-center bg-white rounded-md">
+        <div className="mt-2">
+        <div className= "flex-col rounded-lg sm:overflow-scroll shadow-lg sm:p-1.5 max-w-5xl   bg-opacity-40 mx-auto border border-white bg-slate-200">
+        <div className=" w-full h-fit py-1 flex gap-1  font-semibold items-center bg-white border rounded-md">
               <button
                 onClick={() => setRequests(true)}
                 className={
                   color == 0
-                    ? "px-5 bg-blue-600 ml-2  hover:bg-blue-700 py-1 text-white  h-[65%] rounded-xl"
-                    : "bg-slate-300 px-5 hover:bg-blue-700 hover:text-white ml-2  py-1  h-[65%] rounded-xl"
+                    ? "sm:px-5 px-0.5 bg-blue-600 ml-1 sm:ml-2 text-sm sm:text-base hover:bg-blue-700 py-1 text-white rounded  h-[65%] sm:rounded-xl"
+                    : "bg-slate-300 px-0.5 sm:px-5 hover:bg-blue-700 text-sm sm:text-base hover:text-white sm:ml-2 rounded   py-1  h-[65%] sm:rounded-xl"
                 }
               >
                 Requests
@@ -138,8 +138,8 @@ const completedBooking =()=>{
                 onClick={pendingBookings}
                 className={
                   color == 1
-                    ? "px-5 hover:bg-blue-700 bg-blue-600 text-white ml-2  py-1  h-[65%] rounded-xl"
-                    : "bg-slate-300 px-5 hover:bg-blue-700 hover:text-white ml-2  py-1  h-[65%] rounded-xl"
+                    ? "sm:px-5 px-0.5 hover:bg-blue-700 bg-blue-600   text-sm sm:text-base text-white sm:ml-2  py-1  h-[65%] rounded sm:rounded-xl"
+                    : "bg-slate-300  px-1 sm:px-5 hover:bg-blue-700 text-sm sm:text-base hover:text-white   py-1  h-[65%] rounded sm:rounded-xl"
                 }
               >
                 Pending
@@ -148,8 +148,8 @@ const completedBooking =()=>{
                onClick={completedBooking}
                 className={
                   color == 2
-                    ? "px-5 py-1 bg-blue-600 text-white  h-[65%] rounded-xl"
-                    : "bg-slate-300 px-5 py-1 hover:bg-blue-700 hover:text-white  h-[65%] rounded-xl"
+                    ? "sm:px-5 py-1 px-0.5 bg-blue-600 text-white text-sm sm:text-base  h-[65%] rounded sm:rounded-xl"
+                    : "bg-slate-300 sm:px-5 px-0.5 py-1 hover:bg-blue-700 text-sm sm:text-base hover:text-white  h-[65%] rounded sm:rounded-xl"
                 }
               >
                 Completed
@@ -159,8 +159,8 @@ const completedBooking =()=>{
                onClick={cancelledBooking}
                 className={
                   color == 3
-                    ? "px-5 bg-blue-600 text-white  py-1  h-[65%] rounded-xl"
-                    : "bg-slate-300 px-5 hover:bg-blue-700 hover:text-white   py-1  h-[65%] rounded-xl"
+                    ? "sm:px-5 px-0.5 bg-blue-600 text-white  py-1 text-sm sm:text-base h-[65%] rounded sm:rounded-xl"
+                    : "bg-slate-300 px-0.5 sm:px-5 hover:bg-blue-700 text-sm sm:text-base hover:text-white   py-1  h-[65%] rounded sm:rounded-xl"
                 }
               >
                 Cancelled
@@ -171,9 +171,9 @@ const completedBooking =()=>{
             {booking.length > 0
               ? booking.map((item) => (
                   <>
-                    <div className="flex flex-col md:flex-row relative  space-y-3 mt-2 md:space-y-0 ">
-                      <div className="bg-white flex w-full h-fit py-1  shadow-md rounded-md backdrop:blur-md bg-opacity-95 justify-between items-center">
-                        <div className="w-full rounded-full md:w-28 m-auto grid place-items-center">
+              <div key={item._id} className="flex flex-col md:flex-row space-y-2 mt-2 md:space-y-0 ">
+              <div className="bg-white  flex flex-col py-3 pb-3 sm:pb-0 sm:py-0  sm:flex-row w-full  shadow-md rounded-md backdrop:blur-md bg-opacity-95  items-center">
+              <div className="rounded-full w-28 m-auto sm:grid  place-items-center">
                           <img
                             src={
                               item.user.image
@@ -181,11 +181,11 @@ const completedBooking =()=>{
                                 : "/profileimage.png"
                             }
                             alt="Profile"
-                            className=" w-[60%] rounded-full h-[90%]"
-                          />
+                            className=" w-[5rem] m-auto  md:w-[70%] rounded-full md:h-[100%]"
+                            />
                         </div>
-                        <div className="w-full md:w-1/3 font-Shrikand font-medium flex flex-col space-y-1 pl-3 m-auto">
-                          <h4 className="font-josefin-sans font-bold md:text-lg text-xl">
+                        <div className=" sm:w-full md:w-1/3 font-Shrikand font-medium flex flex-col space-y-1 pl-3 m-auto">
+                        <h4 className="font-josefin-sans font-bold text-center sm:text-start md:text-lg text-xl">
                             { item.user? item.user.name:''}
                           </h4>
                           <h6 className="text-sm font-bold text-slate-600 ">
@@ -202,11 +202,11 @@ const completedBooking =()=>{
                             </div>
                           </div>
                         </div>
-                        <div className="bg-white border border-slate-500 text-red-600 m-auto  flex-col rounded w-[5.5rem]">
-                          <span className="block text-center text-4xl font-bold italic">
+                        <div className="bg-white border border-slate-500 text-red-600 m-auto flex  sm:flex-col rounded  sm:w-[5.5rem]">
+                        <span className="block text-center text-md sm:text-4xl font-bold italic">
                             {new Date(item.BookingDate).getDate()}
                           </span>
-                          <span className="block text-center text-md font-bold text-blue-700">
+                          <span className="block text-center text-sm sm:text-md font-bold text-blue-700">
                             {item
                               ? new Date(item.BookingDate).toLocaleDateString(
                                   "en-US",
@@ -224,10 +224,10 @@ const completedBooking =()=>{
                             item.status == "pending" &&
                             item.request == "requested" ? (
                               <>
-                                <button onClick={()=>accepted(item._id)} className="bg-slate-400   hover:bg-green-700 hover:text-white h-9 px-3 py-1 w-[7rem] text-center rounded-2xl text-md font-medium text-black">
+                                <button onClick={()=>accepted(item._id)} className="bg-slate-400   hover:bg-green-700 hover:text-white mt-2 sm:mt-0  h-fit sm:h-9 px-3 py-1 w-[7rem] text-center rounded-2xl text-md  font-medium text-black">
                                     {spin?<i class="fa-solid fa-circle-notch animate-spin text-green-700"></i>:"Accept"} 
                                 </button>
-                                <button  onClick={()=>getModal(item._id)} className="bg-slate-400  hover:bg-red-700 hover:text-white h-9 px-3 py-1 w-[7rem] text-center rounded-2xl text-md font-medium text-black">
+                                <button  onClick={()=>getModal(item._id)} className="bg-slate-400  hover:bg-red-700 hover:text-white  mt-2 sm:mt-0 h-fit sm:h-9  px-3 py-1 w-[7rem] text-center rounded-2xl text-md font-medium text-black">
                                   Reject
                                 </button>
                               </>
@@ -274,6 +274,7 @@ const completedBooking =()=>{
           </div>
         </div>
    ):''}
+   </div>
     </>
   );
 }

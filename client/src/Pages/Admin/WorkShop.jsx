@@ -14,8 +14,7 @@ function ProView() {
       .then((res) => {
         console.log(count,'====================');
         if (res.status === 200) {
-          setDetails(res.data.WorkShop);
-          console.log(details);
+          setDetails(res.data.workshop);
         }
       })
       .catch((error) => {

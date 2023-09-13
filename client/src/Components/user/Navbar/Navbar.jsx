@@ -21,6 +21,7 @@ export default function Example({data,setHeight}) {
   const navigation = [
     { name: "Home", href: "/", current: false },
     { name: "Freelancers", href: "/prolists", current: false },
+    { name: "WorkShop", href: `/prolists?type=${'workshop'}`, current: false },
     { name: "Bookings",href:userToken? "/bookings":'', current: false },
     { name: "Wallet", href:userToken? '/wallet':'', current: false },
   ];
@@ -29,7 +30,6 @@ export default function Example({data,setHeight}) {
       if(res){
         if(res.data.message=='blocked'){
           dispatch(ClientLogout());
-          // toast.error('Account has been blocked')
               navigate('/')
             return
         }
@@ -114,7 +114,7 @@ export default function Example({data,setHeight}) {
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg-ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
-                            <Link
+                            <p
                               href="#"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
@@ -122,7 +122,7 @@ export default function Example({data,setHeight}) {
                               )}
                             >
                               {userName}
-                            </Link>
+                            </p>
                           )}
                         </Menu.Item>
                         <Menu.Item>

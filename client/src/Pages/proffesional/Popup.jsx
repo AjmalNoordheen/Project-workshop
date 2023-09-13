@@ -88,7 +88,6 @@ function Popup({ fun, sendMessage }) {
       });
   }, [file]);
 
-  // useEffect(() => {}, []);
   const showToastMessage = () => {
     toast.done("Success!", {
       position: toast.POSITION.BOTTOM_LEFT,

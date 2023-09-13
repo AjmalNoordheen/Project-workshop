@@ -20,12 +20,18 @@ prorouter.get('/fetchMessages',chatController.fetchMessages)
 prorouter.post('/addProMessage',chatController.addMessage)
 prorouter.get('/listAllBooking',bookingController.listAllBooking) 
 prorouter.get('/proBookings',bookingController.proBookings) 
+prorouter.get('/getProBookings',proController.proBookings) 
 prorouter.get('/proProfile',auth.verifyProToken,proController.proProfile) 
 prorouter.patch('/updateEditPro',upload.single('file'),proController.updateEditPro) 
-prorouter.get('/getProBookings',auth.verifyProToken,proController.proBookings) 
+prorouter.post('/changeAvailability',auth.verifyProToken,proController.changeAvailability) 
 prorouter.patch('/updateBookingStatus',auth.verifyProToken,proController.updateBookingStatus) 
 prorouter.get('/walletdetails',bookingController.walletdetails)
 prorouter.post('/withDrawelRequest',bookingController.withDrawelRequest)
+prorouter.post('/getGallery',auth.verifyProToken,proController.getGallery)
+prorouter.post('/proGalleryAdd',upload.single('file'),auth.verifyProToken,proController.proGalleryAdd)
+prorouter.post('/removeGallery',auth.verifyProToken,proController.removeGallery)
+
+
 
 
 

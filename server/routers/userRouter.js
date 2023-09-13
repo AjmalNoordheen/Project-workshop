@@ -7,6 +7,8 @@ const multer         = require('../config/multer')
 const upload         = multer.createMulter()
 const check          = require('../middleWare/checkBlocked')
 const chatController = require('../controller/chatController')
+const reviewController = require('../controller/reviewController')
+
 
 router.post('/signUp',userController.userSignup)
 router.post('/login',check.isBlocked,userController.userLogin)
@@ -28,7 +30,8 @@ router.get('/listChat',chatController.listChat)
 router.get('/fetchMessages',chatController.fetchMessages)
 router.get('/walletdetails',bookingController.walletdetails)
 router.post('/withDrawelRequest',bookingController.withDrawelRequest)
-// router.get('/debitedDatas',bookingController.debitedDatas)
+router.post('/addReview',auth.verifyToken,reviewController.addReview)
+router.get('/getReview',check.isBlocked,auth.verifyToken,reviewController.getReview)
 
 
 module.exports=router

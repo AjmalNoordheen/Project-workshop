@@ -36,7 +36,7 @@ function UserRoute() {
      <Route path='/successpage' element={token?<SuccessPage/>:<Navigate to={'/login'}/>}/>
      <Route path='/bookings' element={token?<UsersBooking/>:<Navigate to={'/login'}/>}/>
      <Route path="/wallet" element={<UserWallet/>} />
-      <Route  element={<Errorpage/>}/>
+      <Route path='/*' element={<Errorpage/>}/>
 
     </Routes>
     </>

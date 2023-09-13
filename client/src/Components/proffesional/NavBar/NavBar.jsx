@@ -90,10 +90,10 @@ export function NavBar({data,setHeight}) {
                 {userToken ? (
                   <Menu as="div" className="relative ml-3">
                     <div>
-                      <Menu.Button className="flex rounded-full border border-black bg-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-offset-gray-800">
+                      <Menu.Button className="flex rounded-full border border-black bg-white-800 text-sm focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="sr-only">Open user menu</span>
                         <img
-                          className=" w-10 rounded-full"
+                          className=" w-10 h-10 object-fill rounded-full"
                           src={proData?proData.image:"/profile_3135715.png"}
                           alt=""
                         />
@@ -187,18 +187,7 @@ export function NavBar({data,setHeight}) {
               ))}
             </div>
           </Disclosure.Panel>
-            {/* <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2 ">
-                <Disclosure.Button     >
-                 <p className="text-gray-300 hover:bg-gray-700 hover:text-white  block rounded-md px-3 py-2
-                 text-base font-medium"><Link to={'/'} > Home </Link></p> 
-                </Disclosure.Button>
-                <Disclosure.Button     >
-                 <p className="text-gray-300 hover:bg-gray-700 hover:text-white  block rounded-md px-3 py-2
-                 text-base font-medium"><Link to={'/prolists'} > Freelancer </Link></p> 
-                </Disclosure.Button>
-            </div>
-          </Disclosure.Panel> */}
+           
         </>
       )}
     </Disclosure>

@@ -181,10 +181,14 @@ const listFreelancer = async(req,res)=>{
   // ========Get Mechanic ==================
   const getMechanic = async(req,res)=>{
     try {
-      const {id} = req.query
-      const proDetails = await proSchema.findOne({_id:id})
+      const workshop = await proSchema.find({work:'workshop'}).populate('types')
+      if(workshop){
+        res.status(200).json({workshop})
+      }else{
+        res.status(500)
+      }
     } catch (error) {
-      
+      res.status(500)
     }
   }
 

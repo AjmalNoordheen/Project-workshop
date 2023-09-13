@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import NavBar from "../Navbar/Navbar";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AdminAxiosInstance from '../../../Axios/AdminAxios'
 import ProfessionalAxios from '../../../Axios/proAxios'
 import { useSelector } from "react-redux";
@@ -12,9 +12,16 @@ import Chats from "../../ReuseItems/Chat/ChatArea";
 function ProfessionalList() {
   const [pros,SetPros] = useState([])
   const [types,SetTypes] = useState([])
+  const [load,setLoad] = useState(1)
   const [searchInput,SetSearchInput] = useState('')
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [show,setShow] = useState(1)
+  
+  const location = useLocation() 
+ // Get the query parameter value from the location object.
+  const searchParams = new URLSearchParams(location.search);
+  const type = searchParams.get('type');
+
 
   const token = useSelector((store)=>store.Client.Token)
 
@@ -29,9 +36,16 @@ function ProfessionalList() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await ProAxios.get('/getFreelancer');
-        if (res.data.Freelancer) {
-          SetPros(res.data.Freelancer);
+        let res
+        if(type=='workshop'){
+           res = await ProAxios.get(`/getFreelancer?type=${type}`);
+           setLoad(load+1)
+        }else{
+           res = await ProAxios.get('/getFreelancer');
+           setLoad(load-1)
+        }
+        if (res.data.pro) {
+          SetPros(res.data.pro);
         } else {
           console.log('No Freelancer data available.');
         }
@@ -47,13 +61,13 @@ function ProfessionalList() {
     }
   
     fetchData();
-  }, []);
+  }, [type]);
 
   
 
- const ProDetailPage = (Proemail)=>{
+ const ProDetailPage = (Proemail,proId)=>{
       try {        
-        navigate('/proDetails',{state:Proemail})
+        navigate('/proDetails',{state:{Proemail,proId:proId}})
       } catch (error) {
         console.log(error);
       }

@@ -7,9 +7,11 @@ import createAxiosInstance from '../../../Axios/userAxios'
 import proAxiosInstance from '../../../Axios/proAxios'
 import ViewMap from "../../ReuseItems/ViewMap";
 import { ClientLogout } from "../../../Redux/userState";
+import ShowReviews from "../../ReuseItems/ShowReviews";
+import ProGallery from "./ProGallery";
 
 
-function ProDetailPage({email}) {
+function ProDetailPage({email,id}) {
  
   const [date, setDate] = useState(new Date());
   const [prof,setProf]  = useState('')
@@ -25,6 +27,11 @@ function ProDetailPage({email}) {
   const userEmail = useSelector((state)=>state.Client.email)
   const [userLatitude, setUserLatitude] = useState(null);
   const [userLongitude, setUserLongitude] = useState(null);
+  const [review,setReview] = useState('')
+  const [totalRating,setTotalRating] = useState('')
+  
+  const [showGallery,SetShowGallery] = useState(false)
+
 
   useEffect(()=>{
      userAxios.get(`/proSingleDetails?proEmail=${email}&email=${userEmail}`).then((res)=>{
@@ -61,6 +68,18 @@ function ProDetailPage({email}) {
       }).catch((err)=>{console.log(err);  toast.error(err)})  
 
     
+  },[])
+
+  useEffect(()=>{
+    userAxios.get(`/getReview?id=${id}`).then((res)=>{
+      if(res.data.message=='success'){
+        setReview(res.data)
+        setTotalRating(res.data.totalRating)
+        console.log(res.data)
+      }
+    }).catch((err)=>{
+      console.log(err)
+    })
   },[])
 
   const handleDateClick = (date)=>{
@@ -136,14 +155,14 @@ function ProDetailPage({email}) {
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
-      console.error("Geolocation is not supported by this browser.");
     }
   }, []);
 
   return (
     <div className="w-full min-h-screen p-4 md:p-10 flex justify-center items-center bg-gray-100">
-      <div className="w-full max-w-screen-lg p-6 md:p-10 mx-auto relative rounded bg-white shadow-md">
-        {/* {Available?<p>Available for Now</p>:<p>On Work</p>} */}
+      <div className="w-full min-h-screen max-w-screen-lg p-6 md:p-10 mx-auto relative rounded bg-white shadow-md">
+        <p className={prof.status=='Active'?'text-green-300 font-semibold text-end':'text-red-600 font-semibold text-end'}>{prof?prof.status=='Active'?'Available':'On Work':""}</p>
+       {showGallery?<ProGallery fun={SetShowGallery} proId={id} />:(<>
         <div className="border w-11/12 left-11 absolute top-16 border-gray-300"></div>
         <div className="flex flex-col md:flex-row md:gap-5 md:pt-10 relative">
           <div className="md:relative">
@@ -167,43 +186,54 @@ function ProDetailPage({email}) {
                    <span className="text-sm"> {prof.types?prof.types.map((item)=>item.name).join('  /'):''} </span>
                 </p>
                 <div className="flex items-center">
-                  <p className="text-base font-josefin-sans md:text-lg">
+                  <p className="text-base mt-1 font-josefin-sans md:text-lg">
                     Ranking:
                   </p>
-                  <div className="ml-2 ">
-                    {/* You can use star icons for rating */}
-                    <span>⭐⭐⭐⭐⭐</span>
-                  </div>
+                 <div className="cursor-pointer text-xs mt-2 md:mt-0 flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                className={`w-5 h-5 cursor-pointer ${
+                  star <=totalRating? "text-yellow-400 " : "text-gray-300"
+                }`}
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" 
+                  clipRule="evenodd"
+                />
+              </svg>
+            ))}
+          </div>     
                 </div>
               </div>
             </div>
             <div className="flex flex-col md:w-1/3 mt-12">
               <div className="flex items-center mb-2 md:mb-4">
-                <img
-                  src="/footer/tick.png"
-                  alt=""
-                  className="w-4 h-4 md:w-5 md:h-5"
-                />
+              <i class="fa-solid fa-location-dot text-blue-600 "></i>
                 <p className="ml-2 text-base font-josefin-sans md:text-lg">
                  {prof.location?prof.location:''}
                 </p>
               </div>
               <div className="flex items-center">
-                <img
-                  src="/footer/tick.png"
-                  alt=""
-                  className="w-4 h-4 md:w-5 md:h-5"
-                />
+              <i class="fa-regular fa-message"></i>
                 <p className="ml-2 text-base font-josefin-sans md:text-lg">
                   Available for Chat
                 </p>
+              </div>
+              <div className="flex items-center mt-4 ">
+                <button onClick={()=>SetShowGallery(true)} className="ml-5 text-base bg-blue-600 hover:bg-blue-800 px-2 py-1 rounded text-white font-josefin-sans md:text-lg">
+                Show Gallery
+                </button>
               </div>
             </div>
           </div>
         </div>
         <div className="w-11/12 mx-auto h-1 border-t-2 border-gray-300 mt-5" />
         <div className="flex flex-col md:flex-row items-center gap-6 md:justify-center">
-        <div className="flex flex-col w-[50%] overflow-hidden mt-[3%] md:flex-row items-center gap-6 md:justify-center">
+        <div className="flex flex-col md:w-[50%] overflow-hidden mt-[3%] md:flex-row items-center gap-6 md:justify-center">
             <div className="pb-5  md:pb-0 md:mb-[20%] grid gap-2 md:ml-4">
               <div className="bg-gray-100 p-6 rounded-lg shadow-md">
                 <p className="text-lg font-semibold">Service Details</p>
@@ -231,7 +261,7 @@ function ProDetailPage({email}) {
           <div className="hidden md:block h-[15rem]  border border-gray-300"></div>
           <div className="w-full md:w-[28rem]">
             <div className="mx-auto my-5 flex flex-col items-center">
-              <div className="h-[12rem] w-2/3 align-middle border rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-bg-[#793be4] to-blue-700 text-white">
+              <div className="h-[12rem] md:w-2/3 align-middle border rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-bg-[#793be4] to-blue-700 text-white">
                 <div className="flex justify-center items-center h-full">
                   <Calendar
                    
@@ -253,12 +283,13 @@ function ProDetailPage({email}) {
                   />
                 </div>
               </div>
-              {Token? <button onClick={()=>navigate('/razorpay',{state:proData})} className="mt-4 px-6 py-2 bg-blue-700 text-white rounded-lg shadow-md hover:bg-blue-800 transition-colors transform hover:scale-105">
-                Book Now
-              </button>:
-               <button onClick={()=>toast('login for continue')} className="mt-4 px-6 py-2 bg-blue-400 text-white rounded-lg shadow-md transition-colors transform hover:scale-105">
+              {!Token || prof.status !== 'Active' ? <button onClick={()=>toast(!Token?'login for continue':'Not Available Current Now !')} className="mt-4 px-6 py-2 bg-blue-400 text-white rounded-lg shadow-md transition-colors transform hover:scale-105">
                Book Now
-             </button>}
+             </button> :
+               
+             <button onClick={()=>navigate('/razorpay',{state:proData})} className="mt-4 px-6 py-2 bg-blue-700 text-white rounded-lg shadow-md hover:bg-blue-800 transition-colors transform hover:scale-105">
+             Book Now
+           </button>}
              
             </div>
           </div>
@@ -269,10 +300,13 @@ function ProDetailPage({email}) {
          userLatitude={userLatitude}
         />
         <h1 className="mt-8 md:mt-12 text-lg md:text-xl font-semibold">
-          Previous Works
+       User's Reviews
         </h1>
         <div className="w-11/12 mx-auto border border-gray-300 mt-3" />
-        <div className="w-11/12 h-[15rem] mx-auto mt-3 bg-black" />
+      <div className="w-11/12 h-[17rem]  mx-auto mt-3 bg-white">
+      <ShowReviews review={review}/>
+      </div>
+       </>)}
       </div>
     </div>
   );

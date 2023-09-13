@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import proAxiosInstance from '../../../Axios/proAxios'
 import EditModal from "./EditModal";
 import { ProfessionalLogout } from "../../../Redux/ProState";
+import ProGallery from "./ProGallery";
 
 
 function ProProfile() {
@@ -12,8 +13,9 @@ function ProProfile() {
   const proAxios = proAxiosInstance()
   const dispatch = useDispatch()
   const [modal,setModal] = useState('hide')
+  const [status,setStatus] = useState('')
+  const [count,setCount] = useState(true)
   const navigate  = useNavigate()
-  const Token = useSelector((state)=>state.Proffessional.Token)
   const proData = useSelector((state)=>state.Proffessional.proData)
   useEffect(()=>{
      proAxios.get(`/proProfile?proId=${proData._id}`).then((res)=>{
@@ -37,11 +39,25 @@ function ProProfile() {
     }).catch((err)=>{
       console.log(err);
     })
-  },[modal])
-  console.log(prof);
+  },[modal,status,count])
+
+  const changeAvailability = async(type,id)=>{
+    if(type=='onwork'){
+      setCount(true)
+    }else{
+      setCount(false)
+    }
+    const res =await proAxios.post('/changeAvailability',{type,id})
+    if(res.data){
+      setStatus(res.data)
+    }else{
+      console.log(error)
+    }
+  
+  }
+  console.log(status)
   return (
     <>
-     {/* <nav className="h-[4rem] w-full bg-black"> </nav> */}
      <div  className="min-h-screen  bg-gray-100">
       <div className="p-4 md:p-10 flex justify-center items-center">
         <div className="w-full max-w-screen-lg p-6 md:p-10 mx-auto relative rounded bg-white shadow-md">
@@ -80,6 +96,13 @@ function ProProfile() {
                     <span>⭐⭐⭐⭐⭐</span>
                   </div>
                 </div>
+                {prof.status=="Active"?<button title="Click to change as not Available" onClick={()=>changeAvailability('onwork',prof?._id)} 
+                
+                className="bg-blue-600 px-3 py-1 rounded font-bold text-white ">Not Available</button>:
+                <button title="Click to change as not Available" onClick={()=>changeAvailability('Active',prof?._id)} className="bg-blue-600 px-3 py-1 
+                rounded font-bold text-white ">Available</button>}
+
+
               </div>
             </div>
             <div className="flex flex-col md:w-1/3 mt-12">
@@ -110,37 +133,39 @@ function ProProfile() {
         </div>
         
         <div className="w-11/12 mx-auto h-1 border-t-2 border-gray-300 mt-5" />
-          <div className="flex flex-col mt-[3%] md:flex-row items-center gap-6 md:justify-center">
-            <div className="pb-5 font- md:pb-0 md:mb-10 grid gap-2 md:ml-4">
-              <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-                <p className="text-lg font-semibold">Service Details</p>
-                <div className="flex justify-between mt-2">
-                  <span className="font-bold">Service Fee:</span>
-                  <span className="text-green-500 font-bold">
-                    ₹ {prof.fees ? prof.fees : ""}
-                  </span>
-                </div>
-                <div className="flex justify-between mt-2">
-                  <span className="font-bold">Email:</span>
-                  <span>{prof.email ? prof.email : ""}</span>
-                </div>
-                <div className="flex justify-between mt-2">
-                  <span className="font-bold">Address:</span>
-                  <span>{prof.address ? prof.address : ""}</span>
-                </div>
-                <div className="flex justify-between mt-2">
-                  <span className="font-bold">Working Hours:</span>
-                  <span>{prof.workingTime ? prof.workingTime : ""}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col mt-6 md:flex-row items-center gap-6 md:justify-center">
+  <div className="pb-5 md:pb-0 md:mb-10 grid gap-2 md:ml-4">
+    <div className="bg-white p-6 w-full md:min-w-[20rem] rounded-lg shadow-lg">
+      <p className="text-xl font-semibold mb-4">Service Details</p>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col">
+          <span className="font-bold">Service Fee:</span>
+          <span className="text-green-500 font-bold">
+            ₹ {prof.fees ? prof.fees : ""}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="font-bold">Email:</span>
+          <span>{prof.email ? prof.email : ""}</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="font-bold">Address:</span>
+          <span>{prof.address ? prof.address : ""}</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="font-bold">Working Hours:</span>
+          <span>{prof.workingTime ? prof.workingTime : ""}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
           <hr />
-          <h1 className="mt-8 md:mt-12 text-lg md:text-xl font-semibold">
-            Previous Works
-          </h1>
-          <div className="w-11/12 mx-auto border border-gray-300 mt-3" />
-          <div className="w-11/12 h-[15rem] mx-auto mt-3 bg-black" />
+          <h2 className="text-xl font-bold pb-2 text-gray-500 lg:text-2xl">
+          CLUB GALLERY
+        </h2>
+          <ProGallery/>
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ function ViewMap({email,userLongitude, userLatitude}) {
 
     useEffect(()=>{
         proAxios.get(`/proMapDetails?email=${email}`).then((res)=>{
-            if(res.data.message=='success'){
+            if(res.data.message =='success'){
                 setlongitude(res.data.longitude)
                 setlatitude(res.data.latitude)
                 setPro(res.data.pro)
@@ -186,7 +186,7 @@ function ViewMap({email,userLongitude, userLatitude}) {
   return () => map.remove();
 },[longitude, latitude, endLongitude, endLatitude, pro.name]);
      
-return <div className='overflow-hidden md:h-96 sm:h-56 h-40' ref={mapContainerRef} />
+return <div className='overflow-hidden   md:h-96 sm:h-56 h-52 w-full' ref={mapContainerRef} />
   
 }
 export default ViewMap

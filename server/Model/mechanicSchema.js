@@ -62,6 +62,13 @@ const mechanicSchema=  new mongoose.Schema({
        type:Number,
        default:0
       },
+      gallery:[
+        {
+            image:{
+                type:String
+            }
+        }
+      ]
 })
 
 const mechanicModel = mongoose.model('mechanics',mechanicSchema)

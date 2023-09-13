@@ -135,21 +135,6 @@ const googleMailDetails = async (req, res) => {
         (userSignUp.name = userDetails.name);
       res.json({ userSignUp,user:userDetails });
     } else {
-      // const newUser = await proSchema.create({
-      //   name: payloadDetails.name,
-      //   email: payloadDetails.email,
-      //   isVerified: true,
-      //   isgoogleVerified: true,
-      // });
-      // const token = authToken.generateToken(newUser);
-
-      // (userSignUp.Status = true),
-      //   (userSignUp.message = "you are logged in"),
-      //   (userSignUp.token = token),
-      //   (userSignUp.name = newUser.name);
-      //   userSignUp.email = userDetails.email
-
-      // res.json({ userSignUp,user:userDetails });
       userSignUp.Status=false
       userSignUp.message ='Email not Registerd'
       res.json({ userSignUp})
@@ -253,10 +238,16 @@ const updatePro = async (req, res) => {
 // =========================List Freelancers=====================
   const listFreelancer = async(req,res)=>{
     try {
-      const Freelancer = await proSchema.find({work:'freelancer'}).populate('types')
-      console.log(Freelancer.types);
-      if(Freelancer){
-        res.status(200).json({Freelancer})
+      const type = req.query ? req.query.type :''
+      let pro
+      if(type=='workshop'){
+        pro = await proSchema.find({work:'workshop'}).populate('types')
+        console.log(pro)
+      }else{
+        pro = await proSchema.find({work:'freelancer'}).populate('types')
+      }
+      if(pro){
+        res.status(200).json({pro})
       }else{
         res.status(500)
       }
@@ -382,14 +373,18 @@ const proProfile = async(req,res)=>{
   const updateBookingStatus = async(req,res)=>{
       try {
         const {status,id} = req.query
+
       // BOOKING ACCEPTED BY PRO
+
         if(status=='accept'){
           const updatedBooking = await BookingSchema.updateOne({_id:id},{$set:{status:'pending',request:'Accepted'}})
           if(updatedBooking){
             res.json({status:'success',bookingDetails:updatedBooking})
           }
         }
+
          // BOOKING REJECTED BY PRO
+
         else if(status=='reject'){
           const updatedBooking = await BookingSchema.findOneAndUpdate({_id:id},{$set:{status:'cancelled',request:'Rejected'},
           $unset: {
@@ -417,7 +412,9 @@ const proProfile = async(req,res)=>{
             res.json({status:'success',bookingDetails:updatedBooking})
           }
         }
-         // WORK COMPLETED BY PRO
+
+           // WORK COMPLETED BY PRO
+
          else if(status=='completed'){
           const updatedBooking = await BookingSchema.findOneAndUpdate({_id:id},{$set:{status:'completed',request:'completed'},
           $unset: {
@@ -451,15 +448,95 @@ const proProfile = async(req,res)=>{
       }
   }
 
+  // =============================List the Images in the professional Side getGallery ==================
+    const getGallery = async(req,res)=>{
+      try {
+        const {proId} = req.body
+        console.log(proId)
+        const data = await proSchema.findOne({_id:proId}).sort({_id: -1})
+        res.status(200).json({gallery:data.gallery})
+      } catch (error) {
+        res.status(500).json({errMsg:'Server Error'})
+      }
+    }
+
+// ========================Add Images to The Pofessional's Gallery proGalleryAdd =====================
+
+    const proGalleryAdd = async(req,res)=>{
+        const {proId} = req.body
+        const file = req.file
+        let img
+
+        try {
+          if(file){
+            const upload = await cloudinary.uploader.upload(file?.path)
+            img = upload.secure_url
+            fs.unlinkSync(file.path)
+          }
+          const updatedProGallery = await proSchema.findOneAndUpdate({_id:proId},{$push:{gallery:{image:img}}})
+          console.log(updatedProGallery,'ooooo')
+          res.status(200).json({status:true,gallery:updatedProGallery.gallery})
+      } catch (error) {
+        res.status(500)
+      }
+    }
+
+
+  // ================================== removeGallery ==================================
+
+  const removeGallery = async (req, res) => {
+    const { proId, id } = req.body;
+  
+    try {
+      const pro = await proSchema.findByIdAndUpdate(
+        proId,
+        { $pull: { gallery: { _id: id } } },
+        { new: true }
+      );
+      if (!proId) {
+        return res.status(404).json({ status: false, message: "Club not found" });
+      }
+      const resend = await proSchema.findById({ _id: proId });
+      res.status(200).json({
+        status: true,
+        gallery: resend.gallery,
+        message: "Gallery item removed successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: false,
+        message: "An error occurred while removing the gallery item",
+     });
+    }
+  };
+
+// ==================Change Availability=================
+  const changeAvailability = async(req,res)=>{
+    try {
+      const {type,id} = req.body
+      const pro = await proSchema.findOneAndUpdate({_id:id},{$set:{status:type}})
+      if(pro){
+        res.json(pro.status)
+      }else{
+        res.status(500)
+      }
+    } catch (error) {
+      res.status(500)
+    }
+  }
+
 module.exports = {
   ProffesionalSignup,
   proffesionalLogin,
   googleMailDetails,
   otpCheckMobile,
   checkProffesional,
+  changeAvailability,
   updatePro,listWorkShop,
   listFreelancer,
   proMapDetails,
   proProfile,updateEditPro,
   proBookings,updateBookingStatus,
+  getGallery,proGalleryAdd,removeGallery
 };

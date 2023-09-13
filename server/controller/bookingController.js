@@ -147,21 +147,20 @@ const listAllBooking = async (req, res) => {
 // ===============ProBookings =======================
 
 const proBookings = async (req, res) => {
-    try {
-        const { id } = req.query;
-        const bookings = await bookingSchema.find({ mechanic: id });
+  try {
+      const { id } = req.query;
+      const bookings = await bookingSchema.find({ mechanic: id });
 
-        if (bookings.length > 0) {
-            res.json(bookings);
-        } else {
-            res.status(404).json({ message: 'No bookings found for this mechanic.' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+      if (bookings.length > 0) {
+          res.json(bookings);
+      } else {
+          res.status(404).json({ message: 'No bookings found for this mechanic.' });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
 };
-
 
 // ======================WalletDetails==================
 

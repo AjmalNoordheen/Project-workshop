@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import DeleteAccountModal from "../../../Components/ReuseItems/Modal";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Review from "../../ReuseItems/Review";
+
 
 function Bookings() {
   const userEmail = useSelector((state) => state.Client.email);
@@ -13,6 +15,11 @@ function Bookings() {
   const [complete, setCompleted] = useState(true);
   const [cancel, setCancelled] = useState(1);
   const [color, setColor] = useState(0);
+  
+  const [review, setReview] = useState(false);
+  const [selectedProId, setSelectedProId] = useState('');
+
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const navigate = useNavigate()
 
@@ -83,9 +90,13 @@ function Bookings() {
       }
     }
     
+// For Showing the component of the review
+    const openReview = (id) => {
 
- 
-  
+        setReview(true);
+        setSelectedProId(id);
+    }
+
   return (
     <>
    
@@ -109,11 +120,14 @@ function Bookings() {
                 Cancelled
               </button>
             </div>
-              {booking?booking.map((item)=>
+            {review ?
+                        <Review proId={selectedProId} setReview={setReview}/>:
+                        <>
+                        {booking?booking.map((item)=>
               <>
               <div key={item._id} className="flex flex-col md:flex-row space-y-3 mt-2 md:space-y-0 ">
               <div className="bg-white flex flex-col py-2 sm:py-0  sm:flex-row w-full  shadow-md rounded-md backdrop:blur-md bg-opacity-95  items-center">
-                <small className="text-end w-full h-1 px-2 sm:hidden cursor-pointer">Add Review</small>
+              {item?item.status=='completed'? <small onClick={() => openReview(item.mechanic._id)} className="text-end w-full h-1 px-2 sm:hidden cursor-pointer">Add Review</small>:'':''} 
                 <div className="rounded-full w-28 m-auto sm:grid place-items-center">
                   <img
                     src={item.mechanic.image ? item.mechanic.image:'/profileimage.png'}
@@ -150,8 +164,12 @@ function Bookings() {
                               : ""}
                           </span>
                         </div>
+                       
+
+
+
                 <div className="flex gap-3 m-auto">
-                        {item.status=='completed'? <button className="text-sm hidden sm:block bg-green-600 p-1 rounded font-semibold text-white mb-1">Add review</button>:''}
+                        {item?item.status=='completed'? <button  onClick={() => openReview(item.mechanic._id)} className="text-sm hidden sm:block bg-green-600 p-1 rounded font-semibold text-white mb-1">Add review</button>:'':''}
                   {item?item.status=='pending'?<>
       <DeleteAccountModal fun={setCancelled} isOpen={modalIsOpen} cancel={cancel} id={item._id} closeModal={closeModal} />
                   <button onClick={openModal} className="bg-slate-400  hover:bg-red-700 sm:h-9 px-3 py-1 sm:w-[7rem] text-center rounded sm:rounded-2xl text-sm sm:text-md font-medium text-black">
@@ -168,6 +186,11 @@ function Bookings() {
                                         hiii
     </div>
               }
+                        </>
+                        
+                      }
+
+              
             
           </div>
         </div>

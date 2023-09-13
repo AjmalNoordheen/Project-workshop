@@ -22,7 +22,7 @@ app.use("/", userRouter);
 app.use("/proffesional", proRouter);
 app.use("/admin", adminrouter);
 
-const server = app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => { 
 	console.log("server Started");
 });
 

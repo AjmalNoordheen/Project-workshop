@@ -2,74 +2,109 @@ import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { LinearScale, CategoryScale } from "chart.js/auto";
 import { Chart } from "chart.js/auto";
-import AxiosIns from '../../../Axios/proAxios'
+import AxiosIns from '../../../Axios/proAxios';
 import { useSelector } from "react-redux";
 Chart.register(LinearScale, CategoryScale);
 
-const BarChart = () => {
-  const proAxios = AxiosIns()
-  const [bookings,setBookings] = useState(null)
-  const proData = useSelector((store)=>store.Proffessional.proData)
-  useEffect(()=>{
-    proAxios.get(`/proBookings?id=${proData._id}`).then((res)=>{
-      if(res.data){
-        setBookings(res.data)
+// Function to get the name of the current month
+const getCurrentMonthName = (date) => {
+  const options = { month: "long" };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};
+
+const FinancialYearChart = () => {
+  const proAxios = AxiosIns();
+  const [bookings, setBookings] = useState(null);
+  const proData = useSelector((store) => store.Proffessional.proData);
+
+  useEffect(() => {
+    proAxios.get(`/proBookings?id=${proData._id}`).then((res) => {
+      if (res.data) {
+        setBookings(res.data);
       }
-    })
-  },[])
-  // Get the current date
-  const currentDate = new Date();
+    });
+  }, [proData._id]);
 
-  // Function to get the number of weeks in the recent month
-  const getWeeksInMonth = (year, month) => {
-    const startDate = new Date(year, month, 1);
-    const endDate = new Date(year, month + 1, 0);
-    const daysInMonth = endDate.getDate();
-    const firstDay = startDate.getDay();
-    const totalWeeks = Math.ceil((daysInMonth + firstDay) / 7);
-    return totalWeeks;
+  // Function to check if a date is within the financial year
+  const isWithinFinancialYear = (date) => {
+    const currentYear = new Date().getFullYear();
+    const financialYearStart = new Date(currentYear, 0, 1); // Assuming financial year starts on January 1st
+    const financialYearEnd = new Date(currentYear, 11, 31); // Assuming financial year ends on December 31st of the current year
+    return date >= financialYearStart && date <= financialYearEnd;
   };
 
-  // Function to get the name of the current month
-  const getCurrentMonthName = (month) => {
-    const options = { month: "long" };
-    return new Intl.DateTimeFormat("en-US", options).format(month);
+  // Filter bookings data for the current financial year
+  const bookingsInFinancialYear = bookings
+    ? bookings.filter((booking) => isWithinFinancialYear(new Date(booking.BookingDate)))
+    : [];
+
+  // Function to generate labels for each month within the financial year
+  const generateMonthLabels = () => {
+    const monthLabels = [];
+    const currentYear = new Date().getFullYear();
+    const financialYearStart = new Date(currentYear, 0, 1); // Assuming financial year starts on January 1st
+    const financialYearEnd = new Date(currentYear, 11 , 31); // Assuming financial year ends on December 31st of the current year
+    let currentDate = new Date(financialYearStart);
+
+    while (currentDate <= financialYearEnd) {
+      monthLabels.push(getCurrentMonthName(currentDate));
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    return monthLabels;
   };
 
-  // Calculate the number of weeks in the recent month
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-  const weeksInMonth = getWeeksInMonth(currentYear, currentMonth);
-  const currentMonthName = getCurrentMonthName(currentDate);
+  const monthLabels = generateMonthLabels();
 
-  // Generate week labels for the recent month based on the number of weeks
-  const weekLabels = Array.from({ length: weeksInMonth }, (_, i) => `Week ${i + 1}`);
+  // Function to generate data for each month within the financial year
+  const generateMonthlyData = () => {
+    const monthlyData = Array.from({ length: monthLabels.length }, () => ({
+      Completed: 0,
+      Pending: 0,
+      Cancelled: 0,
+    }));
 
-  // Generate random data for demonstration purposes (replace with your actual data)
-  const generateRandomData = () => {
-    return Array.from({ length: weeksInMonth }, () => Math.floor(Math.random() * 30));
+    // Iterate through bookings and categorize them by month
+    bookingsInFinancialYear.forEach((booking) => {
+      const bookingDate = new Date(booking.BookingDate);
+      const monthIndex = bookingDate.getMonth();
+      const request = booking.status;
+
+      if (request === "completed") {
+        monthlyData[monthIndex].Completed++;
+      } else if (request === "pending") {
+        monthlyData[monthIndex].Pending++;
+      } else if (request === "cancelled") {
+        monthlyData[monthIndex].Cancelled++;
+      }
+    });
+
+    return monthlyData;
   };
 
+  const monthlyData = generateMonthlyData();
+
+  // Create data for the chart
   const data = {
-    labels: weekLabels,
+    labels: monthLabels,
     datasets: [
       {
         label: "Completed",
-        data: generateRandomData(),
+        data: monthlyData.map((month) => month.Completed),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 2,
       },
       {
         label: "Pending",
-        data: generateRandomData(),
+        data: monthlyData.map((month) => month.Pending),
         backgroundColor: "rgba(255, 205, 86, 0.6)",
         borderColor: "rgba(255, 205, 86, 1)",
         borderWidth: 2,
       },
       {
         label: "Cancelled",
-        data: generateRandomData(),
+        data: monthlyData.map((month) => month.Cancelled),
         backgroundColor: "rgba(255, 99, 132, 0.6)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 2,
@@ -90,7 +125,7 @@ const BarChart = () => {
         type: "category",
         title: {
           display: true,
-          text: `Weeks of ${currentMonthName}`,
+          text: `Months of Financial Year ${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
         },
       },
     },
@@ -103,10 +138,10 @@ const BarChart = () => {
   };
 
   return (
-    <div className="chart-container h-full w-full">
+    <div className="chart-container h-full lg:h-96 w-full">
       <Bar data={data} options={options} />
     </div>
   );
 };
 
-export default BarChart;
+export default FinancialYearChart;

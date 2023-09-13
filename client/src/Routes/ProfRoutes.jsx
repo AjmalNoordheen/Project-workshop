@@ -19,7 +19,7 @@ function ProfRoutes() {
     <>
     <Routes>
         <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/login'  element={token?<Navigate to={'/proffesional/prohome'}/>:<Loginpro/>}/>
+        <Route path='/login'  element={token ? <Navigate to={'/proffesional/prohome'}/>:<Loginpro/>}/>
         <Route path='/otplogin'  element={<OtpLogin/>}/>
         <Route path='/prohome'  element={token?<ProHome/>:<Navigate to={'/proffesional/login'}/>}/>
         <Route path='/proChats'  element={token?<Chats/>:<Navigate to={'/proffesional/login'}/>}/>
@@ -27,7 +27,7 @@ function ProfRoutes() {
         <Route path='/bookings'  element={token?<ProBookings/>:<Navigate to={'/proffesional/login'}/>}/>
         <Route path='/otpbookings'  element={token?<OtpCompletedBooking/>:<Navigate to={'/proffesional/login'}/>}/>
         <Route path="/wallet" element={<ProWallet/>} />
-        <Route  element={<Errorpage/>}/>
+        <Route path='/*' element={<Errorpage/>}/>
 
     </Routes>
     </>

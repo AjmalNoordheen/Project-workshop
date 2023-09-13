@@ -21,8 +21,6 @@ export default function Example() {
   const navigation = [
     { name: 'DashBoard', href: '/admin/dashbord', current: false },
     { name: 'Types', href: '/admin/listtypes', current: false },
-    // { name: 'Booking', href: '#', current: false },
-    { name: 'Users', href: '/admin/userlist', current: false },
     { name: 'Work-Shops', href: '/admin/workshop', current: false },
     { name: 'Freelancers', href: '/admin/freelancer', current: false },
   ]
