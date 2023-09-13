@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import createAxiosInstance from '../../Axios/proAxios'
 import { ProfessionalLogin } from '../../Redux/ProState'
-import { auth } from '../../Firebase/firebase.config'
+import { auth } from '../../Firebase/Firebases.config'
 
 function ProOtp() {
 

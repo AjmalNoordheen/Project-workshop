@@ -32,7 +32,7 @@ function UserHome() {
   return (
     <>
   <hr />
-<div className='w-full h-fit bg-black'>
+<div className='w-full h-fit bg-white'>
   <div
     className="w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] bg-cover"
     style={{ backgroundImage: "url('/banner.jpg')" }}
@@ -42,7 +42,7 @@ function UserHome() {
 {/* <Carousel /> */}
 <div className='w-full  bg-zinc-900 flex items-center justify-center'>
 <div  class='sm:w-full lg:w-[95%]    grid grid-cols-12 gap-x-1 md:gap-x-0  md:flex md:items-center sm:place-items-center sm:justify-evenly   gap-y-1 md:gap-6 bg-zinc-900 pl-2 sm:pl-5 pr-3 sm:pr-5 py-5'>
-  <Bann/>
+  <Bann/>     
 </div>
 </div>
 {/* <Carousel/> */}
@@ -61,8 +61,8 @@ function UserHome() {
     </div>
 
 <section class="text-neutral-700 dark:text-neutral-300">
- <div className='bg-white w-full h-96 flex items-center'>
-<div className='' >
+ <div className='bg-white w-full h-96 flex items-center justify-evenly'>
+<div className='w-1/2' >
 <p className='text-black '>
 Welcome to AutoPro Connect, your go-to destination for all your vehicle maintenance needs! Our user-friendly website is designed to make the process of booking and registering with skilled mechanics hassle-free and efficient.</p>
 

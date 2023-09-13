@@ -3,7 +3,7 @@ import React from 'react'
 import UserProfile from '../Components/user/UserProfile/UserProfile'
 import Home from '../Pages/Home'
 import UserSignUp from '../Pages/UserSignUp'
-import Userlogin from '../Pages/UserLogin'
+import Userlogin from '../Pages/Userlogin'
 import VerifyEmail from '../Pages/VerifyEmail'
 import OtpNumer from '../Components/user/otp/OtpNumber'
 import ProDetailedPage from '../Pages/ProDetailedPage'
@@ -14,7 +14,7 @@ import RazorPay from '../Components/Paypal/RazorPay'
 import UsersBooking from '../Pages/User/UsersBooking'
 import { useSelector } from 'react-redux'
 import Errorpage from '../Components/ReuseItems/Errorpage'
-import UserWallet from '../Pages/User/userWallet'
+import UserWallet from '../Pages/User/UserWallet'
 
 
 function UserRoute() {
