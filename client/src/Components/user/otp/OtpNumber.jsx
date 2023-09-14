@@ -1,18 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import OtpInput from 'otp-input-react'
-import { CgSpinner } from 'react-icons/cg'
+// import { CgSpinner } from 'react-icons/cg'
 import { BsFillShieldLockFill } from 'react-icons/bs'
-import { Toaster, toast } from 'react-hot-toast'
 import {RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from '../../../Firebase/Firebases.config'
-
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { ClientLogin } from '../../../Redux/userState'
 import createAxiosInstance from '../../../Axios/userAxios'
+import toast from 'react-hot-toast';
 
 function OtpLogin() {
-
   const regex_mobile = /^\d{10}$/
   const [clicked, setClicked] = useState(false)
   const [showOTP, setShowOTP] = useState(false)
@@ -26,34 +24,38 @@ function OtpLogin() {
 
   const checkMob = () => {
     setResend(false)
-    // if ((regex_mobile.test(phone) == false)) {  
-    //   console.log('llllppppl');
-    //   toast.error('Enter valid mobile number')
-    // } else {
-       userAxios.post('/otpLogin', { phone }).then((res) => {
-        if (res.status == 200) {
-          setData(res.data.data)
-          onCaptchaVerify()
-          const appVerifier = window.recaptchaVerifier
-          const phoneNo = '+91' + phone
-          signInWithPhoneNumber(auth, phoneNo, appVerifier)
-            .then((confirmationResult) => {
-              console.log('asdfsdfsdfsdf');
-              window.confirmationResult = confirmationResult;
-              setShowOTP(true)
-              toast.success('OTP send')
-            }).catch((error) => {
-              console.log(error);
-              if (error?.response?.data?.errMsg) {
-                toast.error(error?.response?.data?.errMsg)
+      let newPhone = phone.trim()
+      if (newPhone.length!==10) {  
+        toast.error('Enter a valid number')
+        return
+      } else{
+        userAxios.post('/otpLogin', { newPhone }).then((res) => {
+          if (res.data.message == 'success') {
+            setData(res.data.data)
+            onCaptchaVerify()
+            const appVerifier = window.recaptchaVerifier
+            const phoneNo = '+91' + phone
+            signInWithPhoneNumber(auth, phoneNo, appVerifier)
+              .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+                setShowOTP(true)
+                toast.success('OTP send')
+              }).catch((error) => {
                 console.log(error);
-              }
-            });
-        }else{
-          toast.error("User not found")
-        }
-      })
-    // }
+                if (error?.response?.data?.errMsg) {
+                  toast.error(error?.response?.data?.errMsg)
+                  console.log(error);
+                }
+              });
+          }else{
+            toast.error(res.data.errMsg)
+          }
+        }).catch((err)=>{
+          console.log(err)
+          toast.error(res.data.errMsg)
+        }) 
+           }
+     
   }
 
   function onCaptchaVerify() {
@@ -71,6 +73,8 @@ function OtpLogin() {
     }
 
   }
+
+  
 
   function otpVerify() {
     setClicked(true)
@@ -128,15 +132,22 @@ function OtpLogin() {
             disabled={false}
             autoFocus
           /> : <input
-            type="text"
+            type="number"
             onChange={(e) => setPhone(e.target.value)}
             className="block border border-grey-light w-full p-3 rounded mb-4"
             name="phone"
-            placeholder="phone No" limit={10}/>}
+            placeholder="phone No"/>}
          {showOTP&&<div className='flex justify-center'>
             <span className='text-center text-white'>{seconds}</span>
           </div>}
-          {!showOTP ? <button className='text-white mt-3 bg-gray-600 w-full flex gap-1 items-center justify-center py-2.5 rounded' onClick={checkMob}><span>Send Otp</span></button> : resend ? <button className='text-white mt-3 bg-green-800 w-full flex gap-1 items-center justify-center py-2.5 rounded' onClick={checkMob}>{clicked ? <CgSpinner size={20} className='animate-spin' /> : ''}<span>Resend Otp</span></button> : <button className='text-white mt-3 bg-green-800 w-full flex gap-1 items-center justify-center py-2.5 rounded' onClick={otpVerify}>{clicked ? <CgSpinner size={20} className='animate-spin' /> : ''}<span>Verify OTP</span></button>}
+          {!showOTP ? <button className='text-white mt-3 bg-gray-600 w-full flex gap-1 items-center justify-center py-2.5 rounded' onClick={checkMob}><span>Send Otp</span></button> : resend ? 
+          <button className='text-white mt-3 bg-green-800 w-full flex gap-1 items-center justify-center py-2.5 rounded' 
+          onClick={checkMob}>{clicked ?               
+             <i class="fa-solid fa-spinner animate-spin"></i>
+          : ''}<span>Resend Otp</span></button> 
+          : <button className='text-white mt-3 bg-green-800 w-full flex gap-1 items-center justify-center py-2.5 rounded' 
+          onClick={otpVerify}>{clicked ?<i class="fa-solid fa-spinner animate-spin"></i>
+          : ''}<span>Verify OTP</span></button>}
         </div>
 
       </div>

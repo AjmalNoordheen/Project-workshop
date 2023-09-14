@@ -38,13 +38,12 @@ function ProOtp() {
           const phoneNo = '+91' + phone
           signInWithPhoneNumber(auth, phoneNo, appVerifier)
             .then((confirmationResult) => {
-              console.log('asdfsdfsdfsdf');
               window.confirmationResult = confirmationResult;
               setShowOTP(true)
               toast.success('OTP send')
             }).catch((error) => {
               if (error?.response?.data?.errMsg) {
-                toast.error(error.response.data.errMsg)
+                toast.error(error?.response?.data?.errMsg)
                 console.log(error);
               }
             });

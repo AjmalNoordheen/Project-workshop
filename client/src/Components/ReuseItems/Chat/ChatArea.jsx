@@ -83,7 +83,6 @@ function Chats({pro,fun}) {
       });
   }, [receiver]);
 
-  console.log(receiver);
 
   const sendMessage = async () => {
     console.log(message.length);
