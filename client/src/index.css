@@ -78,3 +78,17 @@
     transform: rotate(-360deg);
   }
 }  
+/* Add the following CSS classes to your project's Tailwind CSS configuration or in your HTML file */
+@keyframes slide-in {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+/* Apply the animation using Tailwind's animate classes */
+.animate-slide-in {
+  animation: slide-in 1s ease-in-out forwards;
+}

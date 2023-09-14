@@ -5,8 +5,8 @@ function Bann() {
   return (
     <>
     
-      <div className='sm-h-[11rem] lg:mx-4 text-center lg:my-1  mt-4 md:mt-0 col-span-6  md:h-[16rem] sm:w-[18rem] md:w-[26rem] lg:h-[19rem] border-b-[5px] border-blue-600 xl:h-[19rem] bg-black rounded-b text-white '>
-        <div className='bg-black h-full pb-3 md:pb-0 w-full flex flex-col items-center '>
+      <div className='sm-h-[11rem] lg:mx-4 text-center lg:my-1   mt-4 md:mt-0 col-span-6  md:h-[16rem] sm:w-[18rem] md:w-[26rem] lg:h-[19rem] border-b-[5px] border-blue-600 xl:h-[19rem] bg-black rounded text-white '>
+        <div className='bg-black h-full pb-3 md:pb-0 w-full  flex flex-col items-center '>
           <div className='flex justify-between w-full '>
             <h1 className='m-2 font-semibold text-red-600'>Connect to</h1>
             <Link to={'/proffesional/signup'}>
