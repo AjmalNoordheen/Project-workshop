@@ -39,7 +39,7 @@ function Chats({pro,fun}) {
   }, []);
 
   useEffect(() => {
-    const newSocket = io("https://api.motormenders/chat");
+    const newSocket = io("https://api.motormenders.online/chat");
     setSocket(newSocket);
     return () => {
       if (newSocket) newSocket.disconnect();
