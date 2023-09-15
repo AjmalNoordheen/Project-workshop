@@ -6,6 +6,7 @@ import { io } from "socket.io-client";
 import { NavBar } from "../../proffesional/NavBar/NavBar";
 import ChatList from "./ChatList";
 import { useLocation } from "react-router-dom";
+import Navbar from '../../user/Navbar/Navbar'
 
 function Chats({pro,fun}) {
   const [socket, setSocket] = useState(null);
@@ -29,7 +30,7 @@ function Chats({pro,fun}) {
 
   const senderData = useSelector((store) => senderType === 'professional' ?   store.Proffessional.proData : store.Client.userData);
   
-  const Axios=senderType === 'professional'?proAxios:userAxios
+  const Axios = senderType === 'professional'?proAxios:userAxios
 
   useEffect(() => {
       Axios.get(`/listChat?id=${senderData._id}&senderType=${senderType}&proId=${pro}`).then((res) => {
@@ -109,7 +110,7 @@ function Chats({pro,fun}) {
     <div>
       {/* <div className='w-4/12 h-screen flex justify-center items-center bg-black'> */}
           {/* <h1 className="text-xl m-[3%]">Chats</h1> */}
-		  <NavBar/>
+		 {senderType=='professional'?<NavBar/>:<Navbar/>}
       <div className="flex h-screen full antialiased justify-center items-center text-gray-800">
         <ChatList chatList={chatList} show={showMes} setReceiver={setReceiver} timeStamp={new Date(timeStamp)} type={senderType} />
         {/* </div> */}

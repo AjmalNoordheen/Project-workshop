@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import createAxiosInstance from '../../../Axios/userAxios'
 import { ClientLogout } from '../../../Redux/userState'
 import { Link, useNavigate } from 'react-router-dom'
-import Reviews from './Reviews'
-import {Carousel} from 'react-responsive-carousel'
+
 import Bann from './Bann'
 
 function UserHome() {
@@ -33,7 +32,16 @@ function UserHome() {
     <>
   <hr />
 <div className='w-full h-fit bg-white'>
-  <div
+<div className='overflow-hidden  h-auto sm:h-[300px] md:h-[350px] lg:h-[450px] flex flex-col md:flex-row justify-around items-center'>
+    <div className=' sm:h-[22rem] ml-2 md:w-[45%] flex flex-col items-center justify-center '>
+        <h1 className='text-black  text-sm md:text-xl md:text-center  font-bold  '>Convenient and Coefficient Services</h1>
+        <p className='text-black  text-xs md:text-sm font-semibold   text-center'>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto? Minima nulla ad eius nemo laboriosam recusandae cum quas et ipsam, quisquam saepe sed sapiente. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto? Minima nulla ad eius nemo laboriosam recusandae cum quas et ipsam, quisquam saepe sed sapiente. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto?
+        </p>
+    </div>
+    <div className='h-[22rem] w-full md:w-[52%]  bg-contain bg-no-repeat md:bg-cover bg-center' style={{backgroundImage: "url(homebanner.jpg)"}}></div>
+</div>
+  {/* <div
     className="w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[450px] flex flex-col justify-end backdrop-blur-sm xl:h-[550px] bg-cover"
     style={{ backgroundImage: "url('/two-car-mechanic-technician-rk0rdiryvybk5hca.jpg')" }}
   >
@@ -43,7 +51,7 @@ function UserHome() {
     </h1>
     <p className="text-base  sm:text-lg md:text-xl text-red-700">Get Your Vehicle Back on the Road with Ease</p>
    </div>
-  </div>
+  </div> */}
   {/* <div className=" bottom-[2rem] left-0 right-0 text-center">
     <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white md:text-black">
       "Your Trusted Mechanic <br /> Booking Platform"
@@ -58,32 +66,53 @@ function UserHome() {
 </div>
 </div>
 {/* <Carousel/> */}
-
-<div className='overflow-hidden gap-5 bg-white w-full grid grid-cols-12'>
-    <div className='h-[19.5rem] bg-white md:w-full col-span-5 bg-contain bg-no-repeat md:bg-cover bg-center' style={{backgroundImage: "url('/4ever.png')"}}></div>
-    <div className='h-[19.5rem] flex flex-col col-span-7 md:col-span-6'>
-        <h1 className='text-white sm:pb-4 md:pb-0 text-sm md:text-lg md:text-center sm:pt-4 md:pt-8'>Convenient and Coefficient Services</h1>
+<div style={{backgroundImage:'url(https://img.freepik.com/free-vector/new-background-gradien-abstract_125964-1144.jpg?w=826&t=st=1694722814~exp=1694723414~hmac=0c01b859642e20a77f4f3a2db463e34fab316765252de6cd901f2fee229676a3)',backgroundSize:'cover'}} className='overflow-hidden gap-5 bg-white w-full grid grid-cols-12'>
+    <div className='h-[20.5rem] ml-2 flex flex-col col-span-7 md:col-span-6'>
+        <h1 className='text-black sm:pb-4 md:pb-0 text-sm md:text-xl md:text-center sm:pt-4 font-bold  md:pt-8'>Convenient and Coefficient Services</h1>
+        <p className='text-black lg:mt-4 text-xs md:text-sm font-semibold  sm:pb-4 md:pb-8 text-center md:text-left'>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto? Minima nulla ad eius nemo laboriosam recusandae cum quas et ipsam, quisquam saepe sed sapiente. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto? Minima nulla ad eius nemo laboriosam recusandae cum quas et ipsam, quisquam saepe sed sapiente. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto?
+        </p>
+    </div>
+    <div className='h-[20.5rem]  md:w-full col-span-5 bg-contain bg-no-repeat md:bg-cover bg-center' style={{backgroundImage: "url(car1.png)"}}></div>
+</div>
+<div style={{backgroundImage:'url(https://img.freepik.com/free-photo/blue-background-with-dark-blue-background-light-blue-background_1340-35644.jpg?t=st=1694723961~exp=1694727561~hmac=aa902f56071b131c100b1c624c5d1ea6daec82e9742f467bf17bd51cc76b2d04&w=740)',backgroundSize:'cover'}} className='overflow-hidden gap-5 bg-white w-full grid grid-cols-12'>
+    <div className='h-[22rem]  md:w-full col-span-5 bg-contain bg-no-repeat md:bg-cover bg-center' style={{backgroundImage: "url('/4ever.png')"}}></div>
+    <div className='h-[22rem] flex flex-col col-span-7 md:col-span-6'>
+        <h1 className='text-black sm:pb-4 md:pb-0 text-sm md:text-xl md:text-center sm:pt-4 font-bold  md:pt-8'>Convenient and Coefficient Services</h1>
         <p className='text-black lg:mt-4 text-xs md:text-sm font-semibold  sm:pb-4 md:pb-8 text-center md:text-left'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto? Minima nulla ad eius nemo laboriosam recusandae cum quas et ipsam, quisquam saepe sed sapiente. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto? Minima nulla ad eius nemo laboriosam recusandae cum quas et ipsam, quisquam saepe sed sapiente. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod porro perspiciatis aspernatur dicta voluptatibus iusto?
         </p>
     </div>
 </div>
 
-<section class="text-neutral-700 dark:text-neutral-300 mt-2">
-    <div className='bg-white w-full h-auto md:h-96 flex md:flex-row items-center justify-evenly'>
-        <div className=' w-1/2 sm:ml-4'>
-            {/* <p className='text-black text-xs md:text-sm font-semibold'>
-                Welcome to AutoPro Connect, your go-to destination for all your vehicle maintenance needs! Our user-friendly website is designed to make the process of booking and registering with skilled mechanics hassle-free and efficient.
-            </p> */}
-
-            <p className='text-black text-xs md:text-base font-semibold'>🔧 Seamless Booking: Say goodbye to long waits and uncertain appointments. With AutoPro Connect, you can easily schedule your vehicle service or repair appointments with certified mechanics in just a few clicks. Our intuitive interface ensures a smooth booking experience.
-            </p>
-
-            <p className='text-black text-xs md:text-base font-semibold'>🚗 Comprehensive Services: Whether it's a routine checkup, major repairs, or even custom upgrades, our platform connects you with a wide network of experienced mechanics specializing in various vehicle makes and models.
-            </p>
-        </div>
-        <img src="\home_subscription.png" alt="" className=" w-2/5 md:h-[45rem]" />
+<div className='bg-white w-full h-[18rem] flex justify-center  items-center'>
+  <div className='bg-slate-100 w-full gap-1 rounded-md md:w-11/12 h-4/6 flex flex-col items-center justify-center'>
+    <h1 className='font-bold'>How It Works</h1>
+    <div className='flex items-center justify-evenly w-full'>
+      <div className='flex flex-col items-center justify-center'>
+        <img loading='lazy' src="/pic.png" className='h-[7rem] w-[7rem]  rounded-full  border border-black' alt="" />
+        <p>Register</p>
+      </div>
+      <div className='flex flex-col items-center justify-center'>
+        <img loading='lazy' src="/loc.png" className='h-[7rem] w-[7rem]   rounded-full  border border-black' alt="" />
+        <p>Search location</p>
+      </div>
+      <div className='flex flex-col items-center justify-center'>
+        <img loading='lazy' src="/mec.png" className='h-[7rem] w-[7rem]   rounded-full  border border-black' alt="" />
+        <p>Select provider</p>
+      </div>
+      <div className='flex flex-col items-center justify-center'>
+        <img loading='lazy' src="/book.png" className='h-[7rem] w-[7rem]   rounded-full  border border-black' alt="" />
+        <p>Book Appointment</p>
+      </div>
+      <div className='flex flex-col items-center justify-center'>
+        <img loading='lazy' src="/ser.png" className='h-[7rem] w-[7rem]   rounded-full  border border-black' alt="" />
+        <p>Avail the Service</p>
+      </div>
     </div>
+  </div>
+</div>
+<section class="text-neutral-700 dark:text-neutral-300 mt-2">
     <div className='flex w-full h-fit justify-end'>
         <img src="/car.png" className='xl:w-32 sm:w-20 w-16' alt="" />
     </div>

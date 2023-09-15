@@ -13,7 +13,6 @@ export const ProffesionalAuth = createSlice({
   reducers: {
     ProfessionalLogin(state, action) {
       state.Token = action.payload.token;
-      console.log(state.Token, '==========================');
     },
     ProfessionalLogout(state, action) {
       state.Token = '';

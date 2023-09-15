@@ -3,7 +3,7 @@ import OtpInput from 'otp-input-react'
 import { CgSpinner } from 'react-icons/cg'
 import { BsFillShieldLockFill } from 'react-icons/bs'
 import { Toaster, toast } from 'react-hot-toast'
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import createAxiosInstance from '../../Axios/proAxios'
@@ -35,7 +35,7 @@ function ProOtp() {
           setData(res.data.data)
           onCaptchaVerify()
           const appVerifier = window.recaptchaVerifier
-          const phoneNo = '+91' + phone
+          const phoneNo = '+91' + newPhone
           signInWithPhoneNumber(auth, phoneNo, appVerifier)
             .then((confirmationResult) => {
               window.confirmationResult = confirmationResult;

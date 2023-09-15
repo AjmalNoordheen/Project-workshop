@@ -2,183 +2,176 @@ import React, { useEffect, useState } from "react";
 import LineChart from "../chart/LineChart";
 import Popup from '../../../Pages/proffesional/Popup';
 import { useDispatch, useSelector } from 'react-redux';
-import createAxiosInstance from '../../../Axios/proAxios'
-import "react-toastify/dist/ReactToastify.css";
+import createAxiosInstance from '../../../Axios/proAxios';
 import { toast } from 'react-toastify';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProfessionalLogout } from "../../../Redux/ProState";
-import SideBar from "../ReuseItems/SideBar";
 import { NavBar } from "../NavBar/NavBar";
 
 function HomePro() {
-  const [one,setOne] = useState(null)
-  const [message,setMessage] = useState(false)
-  const [allBookings,setallBookings] = useState([])
-  const [countTotal,setTotalCount] = useState(null)
-  const [totalCompleted,setTotalCompleted] = useState(null)
-  const [totalPending,setTotalPending] = useState(null)
-  const ProAxios = createAxiosInstance()
-  const email = useSelector((state) =>state.Proffessional.email);
-  const proData = useSelector((state)=>state.Proffessional.proData)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-useEffect(() => {
-  ProAxios.get(`/checkPro?email=${email}`).then((res)=>{
-    if(res.data.status===false){
-      setTimeout(() => {
-        dispatch(ProfessionalLogout(''))
-        navigate('/proffesional/login')
-      }, 300);
-      return
-    }
-   if(res.data.pro){
-    setOne('show')
-    console.log('worked');
-   }
-  })
-}, []);
+  const [one, setOne] = useState(null);
+  const [message, setMessage] = useState(false);
+  const [allBookings, setAllBookings] = useState([]);
+  const [countTotal, setTotalCount] = useState(null);
+  const [totalCompleted, setTotalCompleted] = useState(null);
+  const [totalPending, setTotalPending] = useState(null);
+  const ProAxios = createAxiosInstance();
+  const email = useSelector((state) => state.Proffessional.email);
+  const proData = useSelector((state) => state.Proffessional.proData);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-useEffect(()=>{
-  ProAxios.get(`/listAllBooking?id=${proData._id}&status=${'total'}`).then((res)=>{
-    setTotalCount(res.data)
-  })
-},[])
-useEffect(()=>{
-  ProAxios.get(`/listAllBooking?id=${proData._id}&status=${'completed'}`).then((res)=>{
-      if(res.data){
-        setTotalCompleted(res.data)
+  useEffect(() => {
+    ProAxios.get(`/checkPro?email=${email}`).then((res) => {
+      if (res.data.status === false) {
+        setTimeout(() => {
+          dispatch(ProfessionalLogout(''));
+          navigate('/proffesional/login');
+        }, 300);
+        return;
       }
-  })
-},[])
-console.log(allBookings)
-useEffect(()=>{
-  ProAxios.get(`/listAllBooking?id=${proData._id}&status=${'all'}`).then((res)=>{
-    if(res.data.status===false){
-      setTimeout(() => {
-        dispatch(ProfessionalLogout(''))
-        navigate('/proffesional/login')
-      }, 300);
-      return
-    }
-    if(res.data){
-      console.log(res.data);
-      setallBookings(res.data)
-    }
-  })
-},[])
+      if (res.data.pro) {
+        setOne('show');
+        console.log('worked');
+      }
+    });
+  }, []);
 
-console.log(Array.isArray(allBookings)
-)
-useEffect(()=>{
-  ProAxios.get(`/listAllBooking?id=${proData._id}&status=${'pending'}`).then((res)=>{
-    if(res.data.status===false){
-      setTimeout(() => {
-        dispatch(ProfessionalLogout(''))
-        navigate('/proffesional/login')
-      }, 300);
-      return
+  useEffect(() => {
+    if (proData) {
+      ProAxios.get(`/listAllBooking?id=${proData._id ? proData._id : ''}&status=${'total'}`).then((res) => {
+        setTotalCount(res.data);
+      });
     }
-    if(res.data){
-      setTotalPending(res.data)
-    }else{
-      setTotalPending(0)
-    }
-  })
-},[])
-  
+  }, []);
 
-if(message){
-  toast.success(message)
-}
+  useEffect(() => {
+    if (proData) {
+      ProAxios.get(`/listAllBooking?id=${proData._id ? proData._id : ''}&status=${'completed'}`).then((res) => {
+        if (res.data) {
+          setTotalCompleted(res.data);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (proData) {
+      ProAxios.get(`/listAllBooking?id=${proData._id ? proData._id : ''}&status=${'all'}`).then((res) => {
+        if (res.data.status === false) {
+          setTimeout(() => {
+            dispatch(ProfessionalLogout(''));
+            navigate('/proffesional/login');
+          }, 300);
+          return;
+        }
+        if (res.data) {
+          console.log(res.data);
+          setAllBookings(res.data);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (proData) {
+      ProAxios.get(`/listAllBooking?id=${proData._id ? proData._id : ''}&status=${'pending'}`).then((res) => {
+        if (res.data.status === false) {
+          setTimeout(() => {
+            dispatch(ProfessionalLogout(''));
+            navigate('/proffesional/login');
+          }, 300);
+          return;
+        }
+        if (res.data) {
+          setTotalPending(res.data);
+        } else {
+          setTotalPending(0);
+        }
+      });
+    }
+  }, []);
+
+  if (message) {
+    toast.success(message);
+  }
+
   return (
-    <>
-    {one=='show' ?<Popup fun={setOne} sendMessage={setMessage}/>:<>
-    <NavBar/>
-    <div className="flex justify-center items-center mt-1 h-fit overflow-hidden">
-      {/* <div className=" w-screen h-[60rem]  lg:h-screen  bg-slate-200 flex justify-between"> */}
-        {/* Sidebar */}
-        {/* <SideBar/> */}
-        {/* NavBar */}
-        {/* <div className="h-[6%] lg:h-[10%] bg-white md:w-[84%]  flex justify-between md:justify-end items-center rounded-es-2xl p-4">
-          <div className="flex md:hidden gap-2 justify-center font-semibold text-sm">
-            <h1>Dashboard</h1>
-            <h1>Bookings</h1>
-            <h1>Profile</h1>
-            <h1>Logout</h1>
-          </div>
-          <div className="h-[5%] w-[5%] flex justify-end items-center">
-          <h1 className="font-jockey-one font-semibold ml-auto pr-3">{proData.name}</h1>
-            <img src={proData?proData.image:"/profileimage.png"} className="rounded-full" alt="" />
-          </div>
-        </div> */}
-        {/* </div> */}
-        {/* Main Div */}
-        <div className="h-full pb-6 flex justify-center rounded-sm  shadow-md md:left-[16%] bg-opacity-10 w-[98%] md:w-11/12 bg-black">
-          <div className="h-[70%] w-full mt-[1%] ml-[2%]  lg:flex md:gap-x-3">
-           <div className="lg:w-4/5  flex-col">
-            <div className="grid grid-cols-12  w-full lg:flex gap-2 lg:gap-3 lg:justify-center mt-2">
-            <div className=" col-span-12 sm:col-span-3 text-center h-[6rem]  lg:w-[16rem] rounded-md shadow-md bg-gradient-to-t to-blue-600 from-blue-400">
-              <h1 className="mt-[2%] font-medium text-lg text-white">TOTAL BOOKINGS</h1>
-              <h1 className="mt-[2%] font-semibold text-4xl">
-               {countTotal?countTotal:0}</h1>
-            </div>
-            <div className=" col-span-12 sm:col-span-3  lg:w-[16rem] h-[6rem] text-center rounded-md shadow-md  bg-gradient-to-t to-blue-600 from-blue-400">
-            <h1 className="mt-[2%] font-medium text-lg text-white">WORK COMPLETED</h1>
-              <h1 className="mt-[2%] font-semibold text-4xl ">{totalCompleted?totalCompleted:0}</h1>
-            </div>
-            <div className=" col-span-12 sm:col-span-3 flex flex-col items-center justify-center  lg:w-[16rem] h-[6rem] text-center rounded-md shadow-md  bg-gradient-to-t to-blue-600 from-blue-400">
-            <h1 className="mt-[2%] font-medium text-lg text-white">WORK PENDING</h1>
-              <h1 className="mt-[2%] font-semibold text-4xl">{totalPending?totalPending:0}</h1>
-            </div>
-            <div className=" col-span-12 sm:col-span-3 lg:hidden flex flex-col items-center justify-center lg:w-[16rem] h-[6rem] text-center rounded-md shadow-md  bg-gradient-to-t to-blue-600 from-blue-400">
-            <h1 className="mt-[2%] font-medium text-lg text-white">WALLET</h1>
-              <h1 className="mt-[2%] font-semibold text-4xl">{proData?.wallet}</h1>
-            </div>
-            </div>
-            <div className="hidden sm:block  lg:h-[90%] w-[99%] lg:w-full ">
-            <div className="lg:w-11/12  mt-4 m-auto  rounded-md shadow-md bg-white">
-              <LineChart/>
-            </div>
-            </div>
-           </div>
-           <div className=" lg:w-[30%] h-[20rem] lg-h-full mt-3 lg:mt-[.8%] space-y-2">
-            <div className="w-auto h-[44%] mr-5 hidden  lg:flex  rounded-md bg-gradient-to-t from-purple-700 to-purple-500 shadow-md ">
-           <div className="flex h-[25%] w-[28%] gap-2 items-center">
-           <i class="fa-solid fa-wallet text-xl  text-black ml-2 py-2 mr-auto"></i>
-            <p className=" font-semibold">WalletAmount</p>
-           </div>
-           <div className=" justify-center items-center w-100 font-bold text-4xl flex gap-2"><p>₹</p><h1 className="">{proData?.wallet}</h1></div>
-            </div>
+    <div className="bg-gray-100 min-h-screen">
+      {one === 'show' ? (
+        <Popup fun={setOne} sendMessage={setMessage} />
+      ) : (
+        <>
+          <NavBar />
+          <div className="container mx-auto p-4">
+            <div className="grid grid-cols-12 gap-4">
+              {/* Left Sidebar */}
+              <div className="col-span-12 lg:col-span-4">
+              <div class=" bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 p-6 lg:h-[47%] rounded-lg shadow-lg">
+  <h1 class="text-2xl font-semibold text-white mb-4">Wallet Amount</h1>
+  <div class="flex items-center justify-center">
+    <i class="fas fa-wallet text-4xl text-black mr-2"></i>
+    <p class="font-semibold text-5xl text-black">₹{proData?.wallet}</p>
+  </div>
+</div>
 
-            <div className=" w-auto h-full lg:w-[95%] space-y-[.8%]  space-x-[.9%] overflow-scroll mr-2 sm:mr-5 rounded-md shadow-md bg-white">
-              <p className="m-2 w-[97%] font-josefin-sans font-medium">Recent Bookings</p>
+                <div className=" mt-4 p-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-lg shadow">
+                  <div className="mb-4">
+                    <h1 className="text-xl  font-bold">Summary</h1>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {/* Total Bookings */}
+                    <div className="p-4 bg-black rounded-lg text-white text-center">
+                      <h2 className="text-lg font-medium">TOTAL BOOKINGS</h2>
+                      <h1 className="text-4xl font-bold">{countTotal ? countTotal : 0}</h1>
+                    </div>
+                    {/* Work Completed */}
+                    <div className="pt-4 bg-black rounded-lg text-white text-center">
+                      <h2 className="text-lg font-medium">WORK COMPLETED</h2>
+                      <h1 className="text-4xl font-bold">{totalCompleted ? totalCompleted : 0}</h1>
+                    </div>
+                    {/* Work Pending */}
+                    <div className="p-4 bg-black rounded-lg text-white text-center">
+                      <h2 className="text-lg font-medium">WORK PENDING</h2>
+                      <h1 className="text-4xl font-bold">{totalPending ? totalPending : 0}</h1>
+                    </div>
+                  </div>
+                </div>
+              
+
+              </div>
+
+              {/* Main Content */}
+              <div className="col-span-12 lg:col-span-8">
+                <div className="bg-white p-4 rounded-lg shadow">
+                  <LineChart />
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 bg-white p-4 rounded-lg shadow">
+              <h1 className="text-xl font-semibold mb-4">Recent Bookings</h1>
               {allBookings.length > 0 ? (
-  allBookings.map((item) => (
-    <div key={item._id} className="w-[97%] overflow-hidden  col-span-1 bg-black bg-opacity-5 shadow flex justify-around items-center h-16">
-      <div className="w-[17%] flex-col overflow-clip  h-16">
-        <img src={item.user?item.user.image:'profileimage.png'} className="h-[65%] rounded-full mt-1 object-fill  w-[65%]" alt="" />
-        <h1 className="text-sm ml-1 w-fit font-semibold text-slate-700 text-center">
-          {item.user ? item.user.name : ''}
-        </h1>
-      </div>
-
-      <div className="text-center overflow-scroll space-y-1 w-[40%]">
-        <p className="text-xs">{item.user ? item.user.email : ''}</p>
-        <p className="text-sm">Ph: {item.user ? item.user.phone : ''}</p>
-      </div>
-      <button onClick={()=>navigate('/proffesional/bookings')}  className="bg-purple-700 hover:translate-x-1 px-3 text-white rounded-md">View</button>
-    </div>
-  ))
-) : (
-  <p>No recent bookings.</p>
-)}                                        
+                allBookings.map((item) => (
+                  <div key={item._id} className="mb-4 bg-gray-200 p-4 rounded-lg shadow flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <img src={item.user ? item.user.image : 'profileimage.png'} className="h-16 w-16 rounded-full" alt="" />
+                      <div>
+                        <h2 className="text-lg font-medium">{item.user ? item.user.name : ''}</h2>
+                        <p className="text-sm">{item.user ? item.user.email : ''}</p>
+                        <p className="text-sm">Ph: {item.user ? item.user.phone : ''}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => navigate('/proffesional/bookings')} className="bg-purple-700 hover:translate-x-1 px-3 text-white rounded-md">View</button>
+                  </div>
+                ))
+              ) : (
+                <p>No recent bookings.</p>
+              )}
             </div>
-           </div>
           </div>
-      </div>
+        </>
+      )}
     </div>
-    </>}
-    </>
   );
 }
 

@@ -9,7 +9,6 @@ import Profile from '../Pages/proffesional/Profile'
 import ProBookings from '../Pages/proffesional/ProBookings'
 import OtpCompletedBooking from '../Pages/proffesional/OtpCompletedBooking'
 import { useSelector } from 'react-redux'
-import Wallet from '../Components/ReuseItems/Wallet'
 import ProWallet from '../Pages/proffesional/ProWallet'
 import Errorpage from '../Components/ReuseItems/Errorpage'
 

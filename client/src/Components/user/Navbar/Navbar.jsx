@@ -47,7 +47,7 @@ export default function Example({data,setHeight}) {
     {setHeight?setHeight(0):''}
   };
   return (
-    <Disclosure as="nav" className={data?"bg-gradient-to-r from-blue-700 to-blue-600 rounded-t-xl":"bg-slate-950"}>
+    <Disclosure as="nav" className="bg-gradient-to-r from-blue-700 to-blue-600 rounded-t-xl">
       {({ open }) => (
         <>
           <div className="mx-auto   max-w-full px-2 sm:px-6 lg:px-8">
@@ -170,7 +170,7 @@ export default function Example({data,setHeight}) {
                   </Menu>
                 ) : (
                   <Link
-                    className="text-white hover:bg-blue-700 bg-blue-500 px-3 py-1 rounded"
+                    className="text-black font-semibold border border-white hover:bg-blue-700 hover:text-white bg-blue-400 px-3 py-1 rounded"
                     to={"/login"}
                   >
                     Login
