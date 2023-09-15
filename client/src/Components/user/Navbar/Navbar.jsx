@@ -202,18 +202,7 @@ export default function Example({data,setHeight}) {
               ))}
             </div>
           </Disclosure.Panel>
-            {/* <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2 ">
-                <Disclosure.Button     >
-                 <p className="text-gray-300 hover:bg-gray-700 hover:text-white  block rounded-md px-3 py-2
-                 text-base font-medium"><Link to={'/'} > Home </Link></p> 
-                </Disclosure.Button>
-                <Disclosure.Button     >
-                 <p className="text-gray-300 hover:bg-gray-700 hover:text-white  block rounded-md px-3 py-2
-                 text-base font-medium"><Link to={'/prolists'} > Freelancer </Link></p> 
-                </Disclosure.Button>
-            </div>
-          </Disclosure.Panel> */}
+           
         </>
       )}
     </Disclosure>

@@ -7,6 +7,7 @@ import ProfessionalAxios from '../../../Axios/proAxios'
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Chats from "../../ReuseItems/Chat/ChatArea";
+import Loader from "../../Loader/Loader";
 
 
 function ProfessionalList() {
@@ -16,6 +17,7 @@ function ProfessionalList() {
   const [searchInput,SetSearchInput] = useState('')
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [show,setShow] = useState(1)
+  const [suspence,setSuspence] = useState(true)
   
   const location = useLocation() 
  // Get the query parameter value from the location object.
@@ -45,6 +47,7 @@ function ProfessionalList() {
            setLoad(load-1)
         }
         if (res.data.pro) {
+          setSuspence(false)
           SetPros(res.data.pro);
         } else {
           console.log('No Freelancer data available.');
@@ -99,7 +102,7 @@ const filteredPros = pros.filter((pro) => {
       <div className="w-full bg-[#1e51db] ">
     <NavBar data={1}/>
     </div>
-      <div className="w-full h-full  bg-slate-200 ">
+    {suspence?<Loader/>:(<div className="w-full h-full  bg-slate-200 ">
         <div className=" sm:flex  justify-center">
           <div className="sm:flex sm:relative top-[4.5rem] left-14">
             <p className="text-black font-gravitas-one text-xl pt-2 sm:pt-0  text-center  font-semibold sm:text-3xl">
@@ -231,7 +234,8 @@ const filteredPros = pros.filter((pro) => {
 </div>
      </div>
     
-      </div>
+      </div>)}
+      
     </>)}
     
 

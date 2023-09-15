@@ -38,14 +38,6 @@ console.log(senderData)
    }
   }, []);
 
-// const debitedData =async(req,res)=>{
-//   try {
-//     BaseAxios.get(`/debitedDatas?senderId=${senderData._id}&type=${type}`)
-//   } catch (error) {
-    
-//   }
-// }
-
   return (
     <>
       
